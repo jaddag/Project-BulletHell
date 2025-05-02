@@ -12,13 +12,16 @@ public class loadingScreen extends ApplicationAdapter {
     private SpriteBatch batch;
     private Texture image;
 
+    private float alpha;
     private BitmapFont font;
 
     @Override
     public void create() {
+
+        alpha = 0f;
         font = new BitmapFont();
         batch = new SpriteBatch();
-        image = new Texture("BulletHellIconStartScreen.png");
+        image = new Texture("Icon/BulletHellIconStartScreen.png");
     }
 
     @Override
@@ -28,9 +31,12 @@ public class loadingScreen extends ApplicationAdapter {
         float Percent = (Gdx.graphics.getWidth() * 0.10f);
         float xWidth = (Gdx.graphics.getWidth() - Percent) / 2f;
         float yWidth = (Gdx.graphics.getHeight() - Percent) / 2f;
+        if (alpha < 1f) alpha += 0.010f;
+        batch.setColor(1,1,1, Math.min(alpha, 1f));
         batch.draw(image, xWidth, yWidth, Percent, Percent);
-//        font.draw(batch ,"Width: " + Gdx.graphics.getWidth() + " Hight: " + Gdx.graphics.getHeight() , 600, 500);
-//        font.getData().setScale(10f);
+        font.draw(batch ,"" + Gdx.graphics.getFramesPerSecond(), 600, 500);
+        font.getData().setScale(10f);
+
         batch.end();
     }
 
