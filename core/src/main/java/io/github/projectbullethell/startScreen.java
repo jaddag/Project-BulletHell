@@ -14,13 +14,14 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import Background.bgGenerator;
+
 public class startScreen implements ApplicationListener{
 
         Texture backgroundTexture;
         Texture shipTexture;
         Texture dropTexture;
-        Sound dropSound;
-        Music music;
+
 
         BitmapFont font;
 
@@ -53,7 +54,7 @@ public class startScreen implements ApplicationListener{
             finalRefreshRate = Gdx.graphics.getDisplayMode().refreshRate;
 
 
-            backgroundTexture = new Texture("Background/starBackground1.png");
+//            backgroundTexture = new Texture("Background/starBackground1.png");
             shipTexture = new Texture("Player/ship.png");
 //            dropTexture = new Texture("drop.png");
 
@@ -65,6 +66,9 @@ public class startScreen implements ApplicationListener{
             shipSprite.setSize(worldWidth/10, worldWidth/10);
 
             touchPos = new Vector2();
+
+            bgGenerator bg = new bgGenerator();
+            backgroundTexture = bg.backgroundGenerator(10, 20, true);
         }
 
         @Override
@@ -135,15 +139,19 @@ public class startScreen implements ApplicationListener{
             float worldWidth = viewport.getWorldWidth();
             float worldHeight = viewport.getWorldHeight();
 
+            bgGenerator bg = new bgGenerator();
+
+
             ScreenUtils.clear(Color.BLACK);
             viewport.apply();
             spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
+            font.getData().setScale(3f);
             spriteBatch.begin();
 
-            font.getData().setScale(1f);
-
             spriteBatch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
-            font.draw(spriteBatch, "FPS: " + Gdx.graphics.getFramesPerSecond(), worldWidth-100, worldHeight-10); // x=100, y=100
+
+            font.draw(spriteBatch, "FPS: " + Gdx.graphics.getFramesPerSecond() + " SR: " + Gdx.graphics.getWidth() + " x " + Gdx.graphics.getHeight(), 20, worldHeight-30);
+            font.draw(spriteBatch, "PosX: " + touchPos.x + " PoxY: " + touchPos.y , 20, worldHeight-90);
             shipSprite.draw(spriteBatch);
 
             spriteBatch.end();
