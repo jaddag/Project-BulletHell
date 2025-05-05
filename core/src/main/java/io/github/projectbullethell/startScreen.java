@@ -8,9 +8,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.ScreenUtils;
 
@@ -18,21 +15,32 @@ import Background.bgGenerator;
 
 public class startScreen implements ApplicationListener{
 
-        Texture backgroundTexture;
+        Texture backgroundTexture1;
+        Texture backgroundTexture2;
+        Texture backgroundTexture3;
+        float speed;
+        float speed1;
+        float speed2;
+        float scrollY;
+        float scrollY1;
+        float scrollY2;
+
+        boolean enableInput;
+
         Texture shipTexture;
         Texture dropTexture;
-
-
         BitmapFont font;
 
         Vector2 touchPos;
-        float speed = 300f;
 
         float worldWidth;
         float worldHeight;
         int screenW;
         int screenH;
         int finalRefreshRate;
+        float deltaTime;
+
+        boolean anim;
 
         SpriteBatch spriteBatch;
         FitViewport viewport;
@@ -41,6 +49,17 @@ public class startScreen implements ApplicationListener{
 
         @Override
         public void create() {
+            anim = true;
+            enableInput = false;
+
+            scrollY = 0;
+
+            deltaTime = Gdx.graphics.getDeltaTime();
+
+            speed = 300f;
+            speed1 = 190;
+            speed2 = 100;
+
             screenW = Gdx.graphics.getWidth();
             screenH = Gdx.graphics.getHeight();
 
@@ -63,12 +82,17 @@ public class startScreen implements ApplicationListener{
 
 
             shipSprite = new Sprite(shipTexture);
+            shipSprite.setCenter(1600 , 300);
             shipSprite.setSize(worldWidth/10, worldWidth/10);
 
             touchPos = new Vector2();
 
             bgGenerator bg = new bgGenerator();
-            backgroundTexture = bg.backgroundGenerator(10, 20, true);
+
+            //paralaxx
+            backgroundTexture3 = bg.backgroundGenerator(100, 22, 0.2f,  33 , false);
+            backgroundTexture2 = bg.backgroundGenerator(10, 20, 0.4f,  33 , false);
+            backgroundTexture1 = bg.backgroundGenerator(14, 17, 0.6f,  63 , true);
         }
 
         @Override
@@ -78,14 +102,19 @@ public class startScreen implements ApplicationListener{
 
         @Override
         public void render() {
+            if(anim == true) {
+                flyAnim();
+            }
+            backgroundDraw();
+            updateBGPos();
             input();
 //		    logic();
             draw();
 
-
         }
 
-        @Override
+
+    @Override
         public void pause() {
             // TODO Auto-generated method stub
 
@@ -99,7 +128,7 @@ public class startScreen implements ApplicationListener{
 
         @Override
         public void dispose() {
-            backgroundTexture.dispose();
+            backgroundTexture1.dispose();
             shipTexture.dispose();
             dropTexture.dispose();
             spriteBatch.dispose();
@@ -109,8 +138,6 @@ public class startScreen implements ApplicationListener{
         private void input() {
             float worldWidth = viewport.getWorldWidth();
 
-            float speed = this.speed;
-            float deltaTime = Gdx.graphics.getDeltaTime();
 
 
 //            if (Gdx.input.isKeyPressed(Input.Keys.D)) {
@@ -125,7 +152,11 @@ public class startScreen implements ApplicationListener{
 //
 //            }
 
-            if (Gdx.input.isTouched()) {
+            if(shipSprite.getY() >= 400){
+                enableInput = true;
+            }
+
+            if (Gdx.input.isTouched() && enableInput) {
                 touchPos.set(Gdx.input.getX(), Gdx.input.getY());
                 viewport.unproject(touchPos);
                 shipSprite.setCenterX(touchPos.x);
@@ -142,20 +173,70 @@ public class startScreen implements ApplicationListener{
             bgGenerator bg = new bgGenerator();
 
 
-            ScreenUtils.clear(Color.BLACK);
+
             viewport.apply();
             spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
             font.getData().setScale(3f);
             spriteBatch.begin();
 
-            spriteBatch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
-
             font.draw(spriteBatch, "FPS: " + Gdx.graphics.getFramesPerSecond() + " SR: " + Gdx.graphics.getWidth() + " x " + Gdx.graphics.getHeight(), 20, worldHeight-30);
-            font.draw(spriteBatch, "PosX: " + touchPos.x + " PoxY: " + touchPos.y , 20, worldHeight-90);
+            font.draw(spriteBatch, "PosX: " + shipSprite.getX() + " PoxY: " + shipSprite.getY() , 20, worldHeight-90);
+            font.draw(spriteBatch, "scrollX: " + scrollY + " scrollX1:" + scrollY1, 20, worldHeight-150);
             shipSprite.draw(spriteBatch);
 
             spriteBatch.end();
         }
 
 
+    private void backgroundDraw() {
+
+        ScreenUtils.clear(Color.BLACK);
+        viewport.apply();
+        spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
+
+        spriteBatch.begin();
+
+        spriteBatch.draw(backgroundTexture1, 0, -scrollY, worldWidth, worldHeight);
+        spriteBatch.draw(backgroundTexture1, 0, worldHeight-scrollY, worldWidth, worldHeight);
+
+
+        spriteBatch.draw(backgroundTexture2, 0, -scrollY1, worldWidth, worldHeight);
+        spriteBatch.draw(backgroundTexture2, 0, worldHeight-scrollY1, worldWidth, worldHeight);
+
+        spriteBatch.draw(backgroundTexture3, 0, -scrollY2, worldWidth, worldHeight);
+        spriteBatch.draw(backgroundTexture3, 0, worldHeight-scrollY2, worldWidth, worldHeight);
+
+        spriteBatch.end();
+
     }
+
+    private void updateBGPos() {
+        deltaTime = Gdx.graphics.getDeltaTime();
+        scrollY += speed * deltaTime;
+        if(scrollY >= worldHeight){
+            scrollY = 0;
+        }
+
+        scrollY1 += speed1 * deltaTime;
+        if(scrollY1 >= worldHeight){
+            scrollY1 = 0;
+        }
+
+        scrollY2 += speed2 * deltaTime;
+        if(scrollY2 >= worldHeight){
+            scrollY2 = 0;
+        }
+
+    }
+
+    private void flyAnim() {
+
+        shipSprite.translateY(speed*deltaTime);
+
+        if(shipSprite.getY() >= 400){
+            anim = false;
+        }
+
+    }
+
+}

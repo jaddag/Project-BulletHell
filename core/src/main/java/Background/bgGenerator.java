@@ -18,7 +18,7 @@ public class bgGenerator {
     float worldWidth = Gdx.graphics.getWidth();
     float worldHeight = Gdx.graphics.getHeight();
 
-    public Texture backgroundGenerator(int seed, int particleAmount, boolean planet){
+    public Texture backgroundGenerator(int seed, int particleAmount, float alphaValue, float  planetSpawnRate ,boolean planet){
         Random rand = new Random(seed);
 
 //        int gridSize = size;
@@ -26,7 +26,7 @@ public class bgGenerator {
         SpriteBatch StarBackgroundBatch = new SpriteBatch();
 
         Pixmap pixmap = new Pixmap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.BLACK);
+        pixmap.setColor(0,0,0,0);
         pixmap.fill();
 
         int cellWidth = Gdx.graphics.getWidth()/particleAmount;
@@ -42,11 +42,11 @@ public class bgGenerator {
                 int x = row * cellWidth + (int)(rand.nextFloat() * (cellWidth - 4));
                 int y = col * cellHeight + (int)(rand.nextFloat() * (cellHeight - 4));
 
-                pixmap.setColor(1f, 1f, 1f, (0.1f +(float)rand.nextFloat() * 0.7f));
+                pixmap.setColor(1f, 1f, 1f, (0.1f +(float)rand.nextFloat() * alphaValue));
                 pixmap.fillRectangle(x, y, 8,8);
 
-                if((int)(Math.random() * 1000) == 1 && planet){
-                    
+                if((int)(Math.random() * estimateChanceInverse(planetSpawnRate/100,particleAmount*particleAmount)) == 1 && planet){
+
                     pixmap.setColor(12/255f, 190/255f, 1f, 1);
                     pixmap.fillRectangle((int)worldWidth/2, (int)worldHeight/2, 40,40);
 
@@ -62,7 +62,7 @@ public class bgGenerator {
         return backgroundTexture;
     }
 
-    private Texture starGen(){
+    private Texture planet(){
 
         Pixmap p = new Pixmap(4, 4, Pixmap.Format.RGBA8888);
 
@@ -75,6 +75,10 @@ public class bgGenerator {
 
 
         return t;
+    }
+
+    private static double estimateChanceInverse(double probability, int trials) {
+        return 1.0 / (1.0 - Math.pow(1.0 - probability, 1.0 / trials));
     }
 
 }
