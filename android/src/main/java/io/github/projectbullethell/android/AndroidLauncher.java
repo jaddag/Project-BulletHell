@@ -4,6 +4,8 @@ import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+
+import MainMethod.BulletHellMain;
 import io.github.projectbullethell.loadingScreen;
 import io.github.projectbullethell.startScreen;
 
@@ -19,7 +21,11 @@ public class AndroidLauncher extends AndroidApplication {
         config.useWakelock = true;
         config.useImmersiveMode = true;
         config.numSamples = 2;
+
         initialize(new startScreen(), config);
+
+
+
     }
 
 

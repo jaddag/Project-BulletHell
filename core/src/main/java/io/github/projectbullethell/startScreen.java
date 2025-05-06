@@ -11,13 +11,18 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import java.util.Random;
+
+import ArrayListDraw.earthArrayList;
 import Background.bgGenerator;
+import Background.planetGen;
 
 public class startScreen implements ApplicationListener{
 
         Texture backgroundTexture1;
         Texture backgroundTexture2;
         Texture backgroundTexture3;
+        Texture planet1;
         float speed;
         float speed1;
         float speed2;
@@ -26,6 +31,7 @@ public class startScreen implements ApplicationListener{
         float scrollY2;
 
         boolean enableInput;
+        boolean anim;
 
         Texture shipTexture;
         Texture dropTexture;
@@ -40,12 +46,11 @@ public class startScreen implements ApplicationListener{
         int finalRefreshRate;
         float deltaTime;
 
-        boolean anim;
-
         SpriteBatch spriteBatch;
         FitViewport viewport;
 
         Sprite shipSprite;
+        Random rand = new Random();
 
         @Override
         public void create() {
@@ -87,12 +92,21 @@ public class startScreen implements ApplicationListener{
 
             touchPos = new Vector2();
 
+            planetGen plGen = new planetGen();
+
             bgGenerator bg = new bgGenerator();
 
             //paralaxx
-            backgroundTexture3 = bg.backgroundGenerator(100, 22, 0.2f,  33 , false);
-            backgroundTexture2 = bg.backgroundGenerator(10, 20, 0.4f,  33 , false);
-            backgroundTexture1 = bg.backgroundGenerator(14, 17, 0.6f,  63 , true);
+            try {
+                backgroundTexture3 = bg.starGen(100, 22, 0.2f, 33, false, 5, 3);
+                backgroundTexture2 = bg.starGen(10, 20, 0.4f, 33, false, 7, 4);
+                backgroundTexture1 = bg.starGen(rand.nextInt() * 1000, 17, 0.6f, 63, true, 9, 5);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+            planet1 = plGen.Earth(9);
+
         }
 
         @Override
@@ -170,10 +184,6 @@ public class startScreen implements ApplicationListener{
             float worldWidth = viewport.getWorldWidth();
             float worldHeight = viewport.getWorldHeight();
 
-            bgGenerator bg = new bgGenerator();
-
-
-
             viewport.apply();
             spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
             font.getData().setScale(3f);
@@ -183,6 +193,8 @@ public class startScreen implements ApplicationListener{
             font.draw(spriteBatch, "PosX: " + shipSprite.getX() + " PoxY: " + shipSprite.getY() , 20, worldHeight-90);
             font.draw(spriteBatch, "scrollX: " + scrollY + " scrollX1:" + scrollY1, 20, worldHeight-150);
             shipSprite.draw(spriteBatch);
+
+            spriteBatch.draw(planet1, 200, 200);
 
             spriteBatch.end();
         }
