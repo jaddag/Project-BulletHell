@@ -13,7 +13,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import java.util.Random;
 
-import ArrayListDraw.earthArrayList;
 import Background.bgGenerator;
 import Background.planetGen;
 
@@ -23,6 +22,7 @@ public class startScreen implements ApplicationListener{
         Texture backgroundTexture2;
         Texture backgroundTexture3;
         Texture planet1;
+        Texture planet2;
         float speed;
         float speed1;
         float speed2;
@@ -110,7 +110,8 @@ public class startScreen implements ApplicationListener{
             gridSize = 25;
 
             planet1 = plGen.Earth(gridSize);
-
+            planet2 = plGen.Jupiter(gridSize);
+;
         }
 
         @Override
@@ -120,7 +121,7 @@ public class startScreen implements ApplicationListener{
 
         @Override
         public void render() {
-            if(anim == true) {
+            if(anim) {
                 flyAnim();
             }
             backgroundDraw();
@@ -199,6 +200,7 @@ public class startScreen implements ApplicationListener{
             shipSprite.draw(spriteBatch);
 
             spriteBatch.draw(planet1, 1200-gridSize, -540);
+            spriteBatch.draw(planet2, 400-gridSize, -540);
 
             spriteBatch.end();
         }
@@ -249,7 +251,7 @@ public class startScreen implements ApplicationListener{
 
         shipSprite.translateY(speed*deltaTime);
 
-        if(shipSprite.getY() >= 400){
+        if(shipSprite.getY() >= 404){
             anim = false;
         }
 
