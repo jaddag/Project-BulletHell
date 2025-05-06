@@ -52,6 +52,8 @@ public class startScreen implements ApplicationListener{
         Sprite shipSprite;
         Random rand = new Random();
 
+        int gridSize;
+
         @Override
         public void create() {
             anim = true;
@@ -105,7 +107,9 @@ public class startScreen implements ApplicationListener{
                 throw new RuntimeException(e);
             }
 
-            planet1 = plGen.Earth(9);
+            gridSize = 25;
+
+            planet1 = plGen.Earth(gridSize);
 
         }
 
@@ -194,7 +198,7 @@ public class startScreen implements ApplicationListener{
             font.draw(spriteBatch, "scrollX: " + scrollY + " scrollX1:" + scrollY1, 20, worldHeight-150);
             shipSprite.draw(spriteBatch);
 
-            spriteBatch.draw(planet1, 200, 200);
+            spriteBatch.draw(planet1, 1200-gridSize, -540);
 
             spriteBatch.end();
         }
