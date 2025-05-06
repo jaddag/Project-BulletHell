@@ -23,6 +23,8 @@ public class startScreen implements ApplicationListener{
         Texture backgroundTexture3;
         Texture planet1;
         Texture planet2;
+        Texture planet3;
+        Texture planet4;
         float speed;
         float speed1;
         float speed2;
@@ -111,6 +113,8 @@ public class startScreen implements ApplicationListener{
 
             planet1 = plGen.Earth(gridSize);
             planet2 = plGen.Jupiter(gridSize);
+            planet3 = plGen.Saturn(gridSize);
+            planet4 = plGen.Sun(gridSize);
 ;
         }
 
@@ -200,7 +204,10 @@ public class startScreen implements ApplicationListener{
             shipSprite.draw(spriteBatch);
 
             spriteBatch.draw(planet1, 1200-gridSize, -540);
-            spriteBatch.draw(planet2, 400-gridSize, -540);
+            spriteBatch.draw(planet4, 300-gridSize, -100);
+            spriteBatch.draw(planet2, 400-gridSize, -200);
+            spriteBatch.draw(planet3, 1700-gridSize, -100);
+
 
             spriteBatch.end();
         }

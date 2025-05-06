@@ -14,7 +14,7 @@ public class planetGen {
 
     public Texture Earth(int pixelSize){
 
-        gridSize = 10   ;
+        gridSize = 10;
 
         earthArrayList eal = new earthArrayList();
         eal.genEarthArrayList();
@@ -26,13 +26,35 @@ public class planetGen {
 
     public Texture Jupiter(int pixelSize){
 
-        gridSize = 21   ;
+        gridSize = 24;
 
         jupiterArrayList jal = new jupiterArrayList();
-        jal.genEarthArrayList();
+        jal.genJupterArrayList();
 
 
         return genTexture(gridSize, jal, pixelSize);
+    }
+
+    public Texture Saturn(int pixelSize){
+
+        gridSize = 21;
+
+        saturnArrayList sal = new saturnArrayList();
+        sal.genSaturnArrayList();
+
+
+        return genTexture(gridSize, sal, pixelSize);
+    }
+
+    public Texture Sun(int pixelSize){
+
+        gridSize = 19;
+
+        sunArrayList sul = new sunArrayList();
+        sul.genSunArrayList();
+
+
+        return genTexture(gridSize, sul, pixelSize);
     }
 
     public <arrayList> Texture genTexture(int gridSize, planet planet, int pixelSize){
