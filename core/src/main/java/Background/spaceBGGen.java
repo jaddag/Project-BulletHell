@@ -1,10 +1,10 @@
-package ArrayListDraw;
+package Background;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import ArrayListDraw.*;
 
- class planetGen {
+public class spaceBGGen {
 
     int pixelSize;
     int gridSize;
@@ -73,11 +73,24 @@ import com.badlogic.gdx.graphics.Texture;
         return genTexture(gridSize, sul);
     }
 
-    private Texture genTexture(int gridSize, planet p){
+    public Texture Nebula(int pixelSize){
+
+        gridSize = 50;
+
+        nebulaArrayList nal = new nebulaArrayList();
+        nal.genNebulaArrayList();
+
+
+        return genTexture(gridSize, nal);
+
+    }
+
+
+
+    public Texture genTexture(int gridSize, planet planet){
         arrCount = -1;
 
-        Pixmap pixmap = new Pixmap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
-        pixmap.setColor(0,0,0,0);
+        Pixmap pixmap = new Pixmap(gridSize * pixelSize, gridSize * pixelSize, Pixmap.Format.RGBA8888);        pixmap.setColor(0,0,0,0);
         pixmap.fill();
 
         for (int column = 0; column < gridSize; column++ ){
@@ -98,6 +111,7 @@ import com.badlogic.gdx.graphics.Texture;
     }
 
 }
+
 
 
 
