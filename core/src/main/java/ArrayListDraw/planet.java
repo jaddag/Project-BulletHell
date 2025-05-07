@@ -8,11 +8,11 @@ import com.badlogic.gdx.math.Rectangle;
 
 import java.util.ArrayList;
 
-import Background.planetGen;
+import Background.spaceBGGen;
 
 public class planet {
 
-    ArrayListDraw.planetGen pl = new ArrayListDraw.planetGen();
+    Background.spaceBGGen pl = new Background.spaceBGGen();
 
     String name;
 

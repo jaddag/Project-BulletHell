@@ -98,7 +98,7 @@ public class spaceBGGen {
                 arrCount++;
 
 
-                pixmap.setColor(p.getArrayList().get(arrCount));
+                pixmap.setColor(planet.getArrayList().get(arrCount));
                 pixmap.fillRectangle(pixelSize*row, pixelSize*column, pixelSize, pixelSize);
 
             }

@@ -35,7 +35,7 @@ public class player implements Disposable {
     }
 
     public static Rectangle getBounds() {
-        return bounds;
+        return null;
     }
 
 
