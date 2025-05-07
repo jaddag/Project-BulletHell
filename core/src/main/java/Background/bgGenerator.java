@@ -77,6 +77,86 @@ public class bgGenerator {
         return backgroundTexture;
     }
 
+    public Texture starGen(int seed, int particleAmount, float alphaValue, float  planetSpawnRate , boolean planet, int maxPixelSize, int minPixelSize, boolean t) throws Exception{
+
+        if(particleAmount<0 || alphaValue<0 || planetSpawnRate<0 || maxPixelSize<0 || minPixelSize<0 || minPixelSize>maxPixelSize){
+            throw new WrongInputEE("Value cant be below 0");
+        }
+
+        Random rand = new Random(seed);
+
+//        int gridSize = size;
+
+        Pixmap pixmap = new Pixmap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
+        pixmap.setColor(0,0,0,0);
+        pixmap.fill();
+
+        int cellWidth = Gdx.graphics.getWidth()/particleAmount;
+
+        int cellHeight = Gdx.graphics.getHeight()/particleAmount;
+
+
+        for (int row = 0; row < particleAmount; row++) {
+            for (int col = 0; col < particleAmount; col++){
+//                int x = row * cellWidth + (int)(Math.random() * cellWidth -4);
+//                int y = col * cellHeight + (int)(Math.random() * cellHeight -4);
+
+                int x = Math.min((int)(row * cellWidth + rand.nextFloat() * (cellWidth - 4)), (int)worldWidth - 1);
+                int y = Math.min((int)(col * cellHeight + rand.nextFloat() * (cellHeight - 4)), (int)worldHeight - 1);
+
+                int index = new Random().nextInt(5); // gives 0–4
+
+                Color color = null;
+                switch (index) {
+                    case 0:
+                        color = new Color(62 / 255f, 32 / 255f, 88 / 255f, 1f); break;  // Deep violet
+                    case 1:
+                        color = new Color(204 / 255f, 84 / 255f, 144 / 255f, 1f); break;// Bright magenta
+                    case 2:
+                        color = new Color(0 / 255f, 152 / 255f, 204 / 255f, 1f); break; // Sky blue
+                    case 3:
+                        color = new Color(204 / 255f, 132 / 255f, 0 / 255f, 1f); break;  // Amber orange
+                    case 4:
+                        color = new Color(204 / 255f, 204 / 255f, 179 / 255f, 1f); break; // Gold-white
+                }
+
+                pixmap.setColor(color);
+                rnd = rand.nextInt(maxPixelSize - minPixelSize + 1) + minPixelSize;
+                pixmap.fillRectangle(x, y, rnd,rnd);
+
+
+                //make special stars (other color, other style)
+                if((int)(rand.nextInt() * estimateChanceInverse(planetSpawnRate/100,particleAmount*particleAmount)) == 1 && planet){
+
+                    int specialX = Math.min((int)(row * cellWidth + rand.nextFloat() * (cellWidth - 4)), (int)worldWidth - 1);
+                    int specialY = Math.min((int)(col * cellHeight + rand.nextFloat() * (cellHeight - 4)), (int)worldHeight - 1);
+
+                    pixmap.setColor(12/255f, 190/255f, 1f, 1);
+                    pixmap.fillRectangle( specialX, specialY, 40,40);
+
+                }
+
+            }
+
+        }
+
+        Texture backgroundTexture = new Texture(pixmap);
+        pixmap.dispose();
+
+        return backgroundTexture;
+    }
+
+    public Texture coloredBackground(int sizeX, int sizeY, Color color){
+        Pixmap pixmap = new Pixmap(sizeX, sizeY, Pixmap.Format.RGBA8888);
+        pixmap.setColor(color);
+        pixmap.fill();
+
+        Texture texture = new Texture(pixmap);
+        pixmap.dispose();
+
+        return texture;
+    }
+
     public Texture starBackground(int gridSize,  int minPixelSize, int maxPixelSize, int sizeX, int sizeY, float BrightChance, float BrightViolettChance, float DarkViolettChance, float BlackChance){
 
         Pixmap pixmap = new Pixmap(sizeX , sizeY, Pixmap.Format.RGBA8888);
@@ -96,7 +176,7 @@ public class bgGenerator {
                     case 3:  color = new Color(148/255f, 68/255f, 169/255f, 1f); break;
                     case 4:  color = new Color(118/255f, 0/255f, 169/255f, 1f); break;
                     case 5:  color = new Color(60/255f, 0/255f, 104/255f, 1f); break;
-                    case 6:  color = new Color(0/255f, 0/255f, 90/255f, 1f); break; // dark blue
+                    case 6:  color = new Color(0f, 0f, 0f, 0f); break; // black
                     case 7:  color = new Color(20/255f, 20/255f, 90/255f, 1f); break;
                     case 8:  color = new Color(0/255f, 152/255f, 204/255f, 1f); break;
                     case 9:  color = new Color(24/255f, 115/255f, 204/255f, 1f); break;
@@ -110,8 +190,10 @@ public class bgGenerator {
                     case 17: color = new Color(204/255f, 172/255f, 0/255f, 1f); break;
                     case 18: color = new Color(204/255f, 204/255f, 179/255f, 1f); break;
                     case 19: color = new Color(204/255f, 200/255f, 200/255f, 1f); break;
-                    case 21: color = new Color(0f, 0f, 0f, 0f); break; // fallback transparent
+                    case 21: color = new Color(0/255f, 0/255f, 90/255f, 1f); break; // darkblue
                 }
+
+
 
                 boolBrightChance = false;
                 boolBrightViolettChance = false;
@@ -150,19 +232,19 @@ public class bgGenerator {
                 }
 
 
-                if (index == 6 || (boolBrightChance && Math.random() < BrightChance)) {
+                if (index == 6 || (boolBrightChance && Math.random()*10 < BrightChance)) {
                     pixmap.setColor(color);
                     int rndPixelSize = (int)(Math.random() * (maxPixelSize - minPixelSize + 1)) + minPixelSize;
                     pixmap.fillRectangle(gridSize * row, gridSize * column, rndPixelSize, rndPixelSize);
-                } else if (this.boolBrightViolettChance && Math.random() < BrightViolettChance) {
+                } else if (this.boolBrightViolettChance && Math.random()*10 < BrightViolettChance) {
                     pixmap.setColor(color);
                     int rndPixelSize = (int)(Math.random() * (maxPixelSize - minPixelSize + 1)) + minPixelSize;
                     pixmap.fillRectangle(gridSize * row, gridSize * column, rndPixelSize, rndPixelSize);
-                } else if (boolDarkViolettChance && Math.random() < DarkViolettChance) {
+                } else if (boolDarkViolettChance && Math.random()*10 < DarkViolettChance) {
                     pixmap.setColor(color);
                     int rndPixelSize = (int)(Math.random() * (maxPixelSize - minPixelSize + 1)) + minPixelSize;
                     pixmap.fillRectangle(gridSize * row, gridSize * column, rndPixelSize, rndPixelSize);
-                }  else if (boolBlackChance && Math.random() < BlackChance) {
+                }  else if (boolBlackChance && Math.random()*10 < BlackChance) {
                     pixmap.setColor(color);
                     int rndPixelSize = (int) (Math.random() * (maxPixelSize - minPixelSize + 1)) + minPixelSize;
                     pixmap.fillRectangle(gridSize * row, gridSize * column, rndPixelSize, rndPixelSize);
@@ -170,6 +252,8 @@ public class bgGenerator {
                     color = new Color(0/255f, 0/255f, 128/255f, 1f);
                     pixmap.fillRectangle(gridSize * row, gridSize * column, gridSize, gridSize);
                 }
+
+                lastColor = color;
 
             }
         }
@@ -200,17 +284,14 @@ public class bgGenerator {
         return 1.0 / (1.0 - Math.pow(1.0 - probability, 1.0 / trials));
     }
 
-    private float duplicateChanceDiminish(Color currentColor, Color lastCreatedColor){
-
-
-        if(currentColor.equals(lastCreatedColor)){
-            chance-= 20f;
-        } else {
+    private float duplicateChanceDiminish(Color currentColor, Color lastCreatedColor) {
+        if (!currentColor.equals(lastCreatedColor)) {
             chance = 100f;
+        } else {
+            chance -= 20f;
+            chance = Math.max(chance, 0f);
         }
-
-        return chance;
-
+        return chance / 100f;
     }
 
 //    private Texture planetGen(){

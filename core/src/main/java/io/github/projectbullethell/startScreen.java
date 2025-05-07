@@ -14,6 +14,7 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import java.security.interfaces.RSAMultiPrimePrivateCrtKey;
 import java.util.Random;
 
 import Background.bgGenerator;
@@ -27,14 +28,18 @@ public class startScreen implements ApplicationListener{
         Texture backgroundTexture3;
         Texture planet1;
         Texture starBackground;
+        Texture alphaBackground;
 
         float shipSpeed;
         float speed;
         float speed1;
         float speed2;
+        float speedSky;
         float scrollY;
         float scrollY1;
         float scrollY2;
+        float scrollSkyTexture;
+
 
         boolean enableInput;
         boolean anim;
@@ -74,9 +79,10 @@ public class startScreen implements ApplicationListener{
 
             shipSpeed = 300f;
 
-            speed = 100f;
-            speed1 = 60f;
-            speed2 = 30f;
+            speed = 40;
+            speed1 = 30;
+            speed2 = 20f;
+            speedSky = 10f;
 
             screenW = Gdx.graphics.getWidth();
             screenH = Gdx.graphics.getHeight();
@@ -106,9 +112,9 @@ public class startScreen implements ApplicationListener{
 
             //paralaxx
             try {
-                backgroundTexture3 = bg.starGen(100, 22, 0.2f, 33, false, 5, 3);
-                backgroundTexture2 = bg.starGen(10, 20, 0.4f, 33, false, 7, 4);
-                backgroundTexture1 = bg.starGen(rand.nextInt() * 1000, 17, 0.6f, 63, true, 9, 5);
+                backgroundTexture3 = bg.starGen(100, 22, 0.2f, 33, false, 5, 3, false);
+                backgroundTexture2 = bg.starGen(10, 20, 0.4f, 33, false, 7, 4, false);
+                backgroundTexture1 = bg.starGen(rand.nextInt() * 1000, 17, 0.6f, 63, true, 9, 5, false);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -123,7 +129,9 @@ public class startScreen implements ApplicationListener{
 //            planet3 = plGen.Saturn(gridSize);
 //            planet4 = plGen.Sun(gridSize);
 
-            starBackground = bg.starBackground(gridSize, 10, 10, screenW, screenH*2, 0.01f, 0.001f, 0.5f, 0.1f);
+            starBackground = bg.starBackground(2, 2, 4, screenW, screenH*2, 0.005f, 0.005f, 0.5f, 0.1f);
+            alphaBackground = bg.coloredBackground(screenW, screenH, new Color(0f,0f,0f,0.5f));
+
         }
 
         @Override
@@ -223,8 +231,9 @@ public class startScreen implements ApplicationListener{
 
         spriteBatch.begin();
 
-        spriteBatch.draw(planet1, 200, 50);
-        spriteBatch.draw(starBackground, worldWidth / 2f - starBackground.getWidth() / 2f, worldHeight / 2f - starBackground.getHeight() / 2f);
+        spriteBatch.draw(starBackground, worldWidth / 2f - starBackground.getWidth() / 2f, (worldHeight - starBackground.getHeight() / 2f) - scrollSkyTexture);
+
+        spriteBatch.draw(alphaBackground, worldWidth / 2f - starBackground.getWidth() / 2f, worldHeight - starBackground.getHeight() / 2f);
 
         spriteBatch.draw(backgroundTexture1, 0, -scrollY, worldWidth, worldHeight);
         spriteBatch.draw(backgroundTexture1, 0, worldHeight-scrollY, worldWidth, worldHeight);
@@ -260,6 +269,11 @@ public class startScreen implements ApplicationListener{
         scrollY2 += speed2 * deltaTime;
         if(scrollY2 >= worldHeight){
             scrollY2 = 0;
+        }
+
+        scrollSkyTexture += speedSky * deltaTime;
+        if(scrollSkyTexture >= worldHeight){
+            scrollSkyTexture = 0;
         }
 
     }
