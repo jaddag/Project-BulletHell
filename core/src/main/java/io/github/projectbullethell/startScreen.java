@@ -1,10 +1,13 @@
 package io.github.projectbullethell;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.ApplicationListener;
@@ -15,6 +18,8 @@ import java.util.Random;
 
 import Background.bgGenerator;
 import Background.planetGen;
+import HUD.HUDUIObserver;
+import Player.player;
 
 public class startScreen implements ApplicationListener{
 
@@ -35,7 +40,6 @@ public class startScreen implements ApplicationListener{
         boolean enableInput;
         boolean anim;
 
-        Texture shipTexture;
         Texture dropTexture;
         BitmapFont font;
 
@@ -50,6 +54,10 @@ public class startScreen implements ApplicationListener{
 
         SpriteBatch spriteBatch;
         FitViewport viewport;
+
+        Rectangle shipRectangle;
+        Rectangle planetRectangle;
+        Sound dropSound;
 
         Sprite shipSprite;
         Random rand = new Random();
@@ -82,17 +90,12 @@ public class startScreen implements ApplicationListener{
             finalRefreshRate = Gdx.graphics.getDisplayMode().refreshRate;
 
 
-//            backgroundTexture = new Texture("Background/starBackground1.png");
-            shipTexture = new Texture("Player/ship.png");
-//            dropTexture = new Texture("drop.png");
+            player player = new player();
+            shipSprite = player.getSprite();
 
-//            dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.mp3"));
+            dropSound = Gdx.audio.newSound(Gdx.files.internal("audioFiles/drop.mp3"));
 //            music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
 
-
-            shipSprite = new Sprite(shipTexture);
-            shipSprite.setCenter(1600 , 300);
-            shipSprite.setSize(worldWidth/10, worldWidth/10);
 
             touchPos = new Vector2();
 
@@ -111,11 +114,16 @@ public class startScreen implements ApplicationListener{
 
             gridSize = 25;
 
+            shipRectangle = new Rectangle();
+            planetRectangle = new Rectangle();
+
             planet1 = plGen.Earth(gridSize);
             planet2 = plGen.Jupiter(gridSize);
             planet3 = plGen.Saturn(gridSize);
             planet4 = plGen.Sun(gridSize);
-;
+
+
+
         }
 
         @Override
@@ -128,6 +136,7 @@ public class startScreen implements ApplicationListener{
             if(anim) {
                 flyAnim();
             }
+
             backgroundDraw();
             updateBGPos();
             input();
@@ -152,7 +161,6 @@ public class startScreen implements ApplicationListener{
         @Override
         public void dispose() {
             backgroundTexture1.dispose();
-            shipTexture.dispose();
             dropTexture.dispose();
             spriteBatch.dispose();
 
@@ -160,8 +168,6 @@ public class startScreen implements ApplicationListener{
 
         private void input() {
             float worldWidth = viewport.getWorldWidth();
-
-
 
 //            if (Gdx.input.isKeyPressed(Input.Keys.D)) {
 //
@@ -175,6 +181,8 @@ public class startScreen implements ApplicationListener{
 //
 //            }
 
+
+
             if(shipSprite.getY() >= 400){
                 enableInput = true;
             }
@@ -182,8 +190,7 @@ public class startScreen implements ApplicationListener{
             if (Gdx.input.isTouched() && enableInput) {
                 touchPos.set(Gdx.input.getX(), Gdx.input.getY());
                 viewport.unproject(touchPos);
-                shipSprite.setCenterX(touchPos.x);
-                shipSprite.setCenterY(touchPos.y);
+                shipSprite.setCenter(touchPos.x, touchPos.y);
             }
         }
 
@@ -202,11 +209,6 @@ public class startScreen implements ApplicationListener{
             font.draw(spriteBatch, "PosX: " + shipSprite.getX() + " PoxY: " + shipSprite.getY() , 20, worldHeight-90);
             font.draw(spriteBatch, "scrollX: " + scrollY + " scrollX1:" + scrollY1, 20, worldHeight-150);
             shipSprite.draw(spriteBatch);
-
-            spriteBatch.draw(planet1, 1200-gridSize, -540);
-            spriteBatch.draw(planet4, 300-gridSize, -100);
-            spriteBatch.draw(planet2, 400-gridSize, -200);
-            spriteBatch.draw(planet3, 1700-gridSize, -100);
 
 
             spriteBatch.end();
@@ -230,6 +232,11 @@ public class startScreen implements ApplicationListener{
 
         spriteBatch.draw(backgroundTexture3, 0, -scrollY2, worldWidth, worldHeight);
         spriteBatch.draw(backgroundTexture3, 0, worldHeight-scrollY2, worldWidth, worldHeight);
+
+        spriteBatch.draw(planet1, 1200-gridSize, -540);
+        spriteBatch.draw(planet4, 300-gridSize, -100);
+        spriteBatch.draw(planet2, 400-gridSize, -200);
+        spriteBatch.draw(planet3, 1700-gridSize, -100);
 
         spriteBatch.end();
 
@@ -261,6 +268,18 @@ public class startScreen implements ApplicationListener{
         if(shipSprite.getY() >= 404){
             anim = false;
         }
+
+    }
+
+    public void logic(){
+        shipSprite.setX(MathUtils.clamp(shipSprite.getX(), 0, worldWidth));
+
+        if (shipRectangle.overlaps(planetRectangle)){
+            dropSound.play();
+        }
+    }
+
+    private void createCollison(){
 
     }
 
