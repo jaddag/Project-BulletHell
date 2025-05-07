@@ -1,19 +1,34 @@
 package Background;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-
 import ArrayListDraw.*;
 
 public class spaceBGGen {
 
+    int pixelSize;
     int gridSize;
 
     int arrCount;
 
-    public Texture Earth(int pixelSize){
+    public Texture getPlanetTexture(String planetName, int pixelSize){
+
+        this.pixelSize = pixelSize;
+
+        if (planetName == "Earth") {
+            return Earth();
+        } else if (planetName == "Jupiter") {
+            return Jupiter();
+
+        } else if (planetName == "Saturn") {
+            return Saturn();
+
+        } else if (planetName == "Sun") {
+            return Sun();
+        } return null;
+    }
+
+    private Texture Earth(){
 
         gridSize = 10;
 
@@ -21,11 +36,11 @@ public class spaceBGGen {
         eal.genEarthArrayList();
 
 
-        return genTexture(gridSize, eal, pixelSize);
+        return genTexture(gridSize, eal);
 
     }
 
-    public Texture Jupiter(int pixelSize){
+    private Texture Jupiter(){
 
         gridSize = 24;
 
@@ -33,10 +48,10 @@ public class spaceBGGen {
         jal.genJupterArrayList();
 
 
-        return genTexture(gridSize, jal, pixelSize);
+        return genTexture(gridSize, jal);
     }
 
-    public Texture Saturn(int pixelSize){
+    private Texture Saturn(){
 
         gridSize = 21;
 
@@ -44,10 +59,10 @@ public class spaceBGGen {
         sal.genSaturnArrayList();
 
 
-        return genTexture(gridSize, sal, pixelSize);
+        return genTexture(gridSize, sal);
     }
 
-    public Texture Sun(int pixelSize){
+    private Texture Sun(){
 
         gridSize = 19;
 
@@ -55,7 +70,7 @@ public class spaceBGGen {
         sul.genSunArrayList();
 
 
-        return genTexture(gridSize, sul, pixelSize);
+        return genTexture(gridSize, sul);
     }
 
     public Texture Nebula(int pixelSize){
@@ -66,13 +81,13 @@ public class spaceBGGen {
         nal.genNebulaArrayList();
 
 
-        return genTexture(gridSize, nal, pixelSize);
+        return genTexture(gridSize, nal);
 
     }
 
 
 
-    public Texture genTexture(int gridSize, planet planet, int pixelSize){
+    public Texture genTexture(int gridSize, planet planet){
         arrCount = -1;
 
         Pixmap pixmap = new Pixmap(gridSize * pixelSize, gridSize * pixelSize, Pixmap.Format.RGBA8888);        pixmap.setColor(0,0,0,0);
@@ -83,7 +98,7 @@ public class spaceBGGen {
                 arrCount++;
 
 
-                pixmap.setColor(planet.getArrayList().get(arrCount));
+                pixmap.setColor(p.getArrayList().get(arrCount));
                 pixmap.fillRectangle(pixelSize*row, pixelSize*column, pixelSize, pixelSize);
 
             }
@@ -96,3 +111,7 @@ public class spaceBGGen {
     }
 
 }
+
+
+
+
