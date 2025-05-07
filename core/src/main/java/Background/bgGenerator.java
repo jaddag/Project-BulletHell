@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.Random;
 
@@ -14,7 +13,7 @@ public class bgGenerator {
 
     boolean isBright;
     boolean isMid;
-    boolean isWeakBlue;
+    boolean isViolett;
 
     int rnd;
     float worldWidth = Gdx.graphics.getWidth();
@@ -73,7 +72,7 @@ public class bgGenerator {
         return backgroundTexture;
     }
 
-    public Texture starBackground(int gridSize,  int minPixelSize, int maxPixelSize, int sizeX, int sizeY, float darknessChance, float x, float bluenessChance){
+    public Texture starBackground(int gridSize,  int minPixelSize, int maxPixelSize, int sizeX, int sizeY, float brightnessChance, float isMid, float violettChance){
 
         Pixmap pixmap = new Pixmap(sizeX , sizeY, Pixmap.Format.RGBA8888);
         pixmap.fill();
@@ -109,8 +108,8 @@ public class bgGenerator {
                 }
 
                 isBright = false;
-                isMid = false;
-                isWeakBlue = false;
+                this.isMid = false;
+                isViolett = false;
 
 
                 switch (index) {
@@ -134,7 +133,7 @@ public class bgGenerator {
                     case 2:
                     case 10:
                     case 11:
-                        isMid = true;
+                        this.isMid = true;
                         break;
                 }
 
@@ -143,23 +142,23 @@ public class bgGenerator {
                     case 4:
                     case 5:
                     case 7:
-                        isWeakBlue = true;
+                        isViolett = true;
                         break;
                 }
 
-                if (isBright && Math.random() < darknessChance) {
+                if (index == 6 || (isBright && Math.random() < brightnessChance)) {
                     pixmap.setColor(color);
                     int rndPixelSize = (int)(Math.random() * (maxPixelSize - minPixelSize + 1)) + minPixelSize;
                     pixmap.fillRectangle(gridSize * row, gridSize * column, rndPixelSize, rndPixelSize);
-                } else if (isMid && Math.random() < x) {
+                } else if (this.isMid && Math.random() < isMid) {
                     pixmap.setColor(color);
                     int rndPixelSize = (int)(Math.random() * (maxPixelSize - minPixelSize + 1)) + minPixelSize;
                     pixmap.fillRectangle(gridSize * row, gridSize * column, rndPixelSize, rndPixelSize);
-                } else if (isWeakBlue && Math.random() < bluenessChance) {
+                } else if (isViolett && Math.random() < violettChance) {
                     pixmap.setColor(color);
                     int rndPixelSize = (int)(Math.random() * (maxPixelSize - minPixelSize + 1)) + minPixelSize;
                     pixmap.fillRectangle(gridSize * row, gridSize * column, rndPixelSize, rndPixelSize);
-                } else{
+                } else {
                     color = new Color(0/255f, 0/255f, 128/255f, 1f);
                     pixmap.fillRectangle(gridSize * row, gridSize * column, gridSize, gridSize);
                 }

@@ -123,7 +123,7 @@ public class startScreen implements ApplicationListener{
 //            planet3 = plGen.Saturn(gridSize);
 //            planet4 = plGen.Sun(gridSize);
 
-            starBackground = bg.starBackground(gridSize, 10, 10, screenW, screenH, 0.01f, 0.021f, 100f);
+            starBackground = bg.starBackground(gridSize, 10, 10, screenW, screenH, 0.1f, 0.021f, 10f);
         }
 
         @Override
