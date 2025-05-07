@@ -17,8 +17,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import java.util.Random;
 
 import Background.bgGenerator;
-import Background.planetGen;
-import HUD.HUDUIObserver;
+import Background.spaceBGGen;
 import Player.player;
 
 public class startScreen implements ApplicationListener{
@@ -27,9 +26,9 @@ public class startScreen implements ApplicationListener{
         Texture backgroundTexture2;
         Texture backgroundTexture3;
         Texture planet1;
-        Texture planet2;
-        Texture planet3;
-        Texture planet4;
+        Texture starBackground;
+
+        float shipSpeed;
         float speed;
         float speed1;
         float speed2;
@@ -73,9 +72,11 @@ public class startScreen implements ApplicationListener{
 
             deltaTime = Gdx.graphics.getDeltaTime();
 
-            speed = 300f;
-            speed1 = 190;
-            speed2 = 100;
+            shipSpeed = 300f;
+
+            speed = 100f;
+            speed1 = 60f;
+            speed2 = 30f;
 
             screenW = Gdx.graphics.getWidth();
             screenH = Gdx.graphics.getHeight();
@@ -99,7 +100,7 @@ public class startScreen implements ApplicationListener{
 
             touchPos = new Vector2();
 
-            planetGen plGen = new planetGen();
+            spaceBGGen plGen = new spaceBGGen();
 
             bgGenerator bg = new bgGenerator();
 
@@ -112,18 +113,17 @@ public class startScreen implements ApplicationListener{
                 throw new RuntimeException(e);
             }
 
-            gridSize = 25;
+            gridSize = 10;
 
             shipRectangle = new Rectangle();
             planetRectangle = new Rectangle();
 
-            planet1 = plGen.Earth(gridSize);
-            planet2 = plGen.Jupiter(gridSize);
-            planet3 = plGen.Saturn(gridSize);
-            planet4 = plGen.Sun(gridSize);
+            planet1 = plGen.Nebula(gridSize);
+//            planet2 = plGen.Jupiter(gridSize);
+//            planet3 = plGen.Saturn(gridSize);
+//            planet4 = plGen.Sun(gridSize);
 
-
-
+            starBackground = bg.starBackground(gridSize, 10, 10, screenW, screenH, 0.01f, 0.021f, 100f);
         }
 
         @Override
@@ -223,6 +223,9 @@ public class startScreen implements ApplicationListener{
 
         spriteBatch.begin();
 
+        spriteBatch.draw(planet1, 200, 50);
+        spriteBatch.draw(starBackground, worldWidth / 2f - starBackground.getWidth() / 2f, worldHeight / 2f - starBackground.getHeight() / 2f);
+
         spriteBatch.draw(backgroundTexture1, 0, -scrollY, worldWidth, worldHeight);
         spriteBatch.draw(backgroundTexture1, 0, worldHeight-scrollY, worldWidth, worldHeight);
 
@@ -233,10 +236,10 @@ public class startScreen implements ApplicationListener{
         spriteBatch.draw(backgroundTexture3, 0, -scrollY2, worldWidth, worldHeight);
         spriteBatch.draw(backgroundTexture3, 0, worldHeight-scrollY2, worldWidth, worldHeight);
 
-        spriteBatch.draw(planet1, 1200-gridSize, -540);
-        spriteBatch.draw(planet4, 300-gridSize, -100);
-        spriteBatch.draw(planet2, 400-gridSize, -200);
-        spriteBatch.draw(planet3, 1700-gridSize, -100);
+
+//        spriteBatch.draw(planet4, 300-gridSize, -100);
+//        spriteBatch.draw(planet2, 400-gridSize, -200);
+//        spriteBatch.draw(planet3, 1700-gridSize, -100);
 
         spriteBatch.end();
 
@@ -263,7 +266,7 @@ public class startScreen implements ApplicationListener{
 
     private void flyAnim() {
 
-        shipSprite.translateY(speed*deltaTime);
+        shipSprite.translateY(shipSpeed*deltaTime);
 
         if(shipSprite.getY() >= 404){
             anim = false;

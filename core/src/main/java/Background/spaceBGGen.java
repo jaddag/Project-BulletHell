@@ -1,12 +1,13 @@
 package Background;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 
 import ArrayListDraw.*;
 
-public class planetGen {
+public class spaceBGGen {
 
     int gridSize;
 
@@ -57,11 +58,24 @@ public class planetGen {
         return genTexture(gridSize, sul, pixelSize);
     }
 
-    public <arrayList> Texture genTexture(int gridSize, planet planet, int pixelSize){
+    public Texture Nebula(int pixelSize){
+
+        gridSize = 50;
+
+        nebulaArrayList nal = new nebulaArrayList();
+        nal.genNebulaArrayList();
+
+
+        return genTexture(gridSize, nal, pixelSize);
+
+    }
+
+
+
+    public Texture genTexture(int gridSize, planet planet, int pixelSize){
         arrCount = -1;
 
-        Pixmap pixmap = new Pixmap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
-        pixmap.setColor(0,0,0,0);
+        Pixmap pixmap = new Pixmap(gridSize * pixelSize, gridSize * pixelSize, Pixmap.Format.RGBA8888);        pixmap.setColor(0,0,0,0);
         pixmap.fill();
 
         for (int column = 0; column < gridSize; column++ ){
