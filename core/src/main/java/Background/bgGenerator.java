@@ -11,9 +11,14 @@ import ExceptionFolder.WrongInputEE;
 
 public class bgGenerator {
 
-    boolean isBright;
-    boolean isMid;
-    boolean isViolett;
+    float chance;
+
+    Color lastColor;
+
+    boolean boolBrightChance;
+    boolean boolBrightViolettChance;
+    boolean boolDarkViolettChance;
+    boolean boolBlackChance;
 
     int rnd;
     float worldWidth = Gdx.graphics.getWidth();
@@ -72,44 +77,46 @@ public class bgGenerator {
         return backgroundTexture;
     }
 
-    public Texture starBackground(int gridSize,  int minPixelSize, int maxPixelSize, int sizeX, int sizeY, float brightnessChance, float isMid, float violettChance){
+    public Texture starBackground(int gridSize,  int minPixelSize, int maxPixelSize, int sizeX, int sizeY, float BrightChance, float BrightViolettChance, float DarkViolettChance, float BlackChance){
 
         Pixmap pixmap = new Pixmap(sizeX , sizeY, Pixmap.Format.RGBA8888);
-        pixmap.fill();
+        Color color = new Color();
 
 
         for (int column = 0; column < sizeY; column++ ){
             for (int row = 0; row < sizeX; row++){
-                int index = (int)(Math.random() * 20);
+                int index = (int)(Math.random() * 22);
 
-                Color color;
+
+
                 switch (index) {
-                    case 0:  color = new Color(78/255f, 41/255f, 110/255f, 1f); break;
-                    case 1:  color = new Color(102/255f, 51/255f, 153/255f, 1f); break;
-                    case 2:  color = new Color(128/255f, 0/255f, 128/255f, 1f); break;
-                    case 3:  color = new Color(186/255f, 85/255f, 211/255f, 1f); break;
-                    case 4:  color = new Color(148/255f, 0/255f, 211/255f, 1f); break;
-                    case 5:  color = new Color(75/255f, 0/255f, 130/255f, 1f); break;
-                    case 6:  color = new Color(0/255f, 0/255f, 128/255f, 1f); break;
-                    case 7:  color = new Color(25/255f, 25/255f, 112/255f, 1f); break;
-                    case 8:  color = new Color(0/255f, 191/255f, 255/255f, 1f); break;
-                    case 9:  color = new Color(30/255f, 144/255f, 255/255f, 1f); break;
-                    case 10: color = new Color(70/255f, 130/255f, 180/255f, 1f); break;
-                    case 11: color = new Color(72/255f, 61/255f, 139/255f, 1f); break;
-                    case 12: color = new Color(255/255f, 105/255f, 180/255f, 1f); break;
-                    case 13: color = new Color(255/255f, 20/255f, 147/255f, 1f); break;
-                    case 14: color = new Color(255/255f, 69/255f, 0/255f, 1f); break;
-                    case 15: color = new Color(255/255f, 140/255f, 0/255f, 1f); break;
-                    case 16: color = new Color(255/255f, 165/255f, 0/255f, 1f); break;
-                    case 17: color = new Color(255/255f, 215/255f, 0/255f, 1f); break;
-                    case 18: color = new Color(255/255f, 255/255f, 224/255f, 1f); break;
-                    case 19: color = new Color(255/255f, 250/255f, 250/255f, 1f); break;
-                    default: color = new Color(0f, 0f, 0f, 0f); break; // fallback transparent
+                    case 0:  color = new Color(62/255f, 32/255f, 88/255f, 1f); break;
+                    case 1:  color = new Color(81/255f, 40/255f, 122/255f, 1f); break;
+                    case 2:  color = new Color(102/255f, 0/255f, 102/255f, 1f); break;
+                    case 3:  color = new Color(148/255f, 68/255f, 169/255f, 1f); break;
+                    case 4:  color = new Color(118/255f, 0/255f, 169/255f, 1f); break;
+                    case 5:  color = new Color(60/255f, 0/255f, 104/255f, 1f); break;
+                    case 6:  color = new Color(0/255f, 0/255f, 90/255f, 1f); break; // dark blue
+                    case 7:  color = new Color(20/255f, 20/255f, 90/255f, 1f); break;
+                    case 8:  color = new Color(0/255f, 152/255f, 204/255f, 1f); break;
+                    case 9:  color = new Color(24/255f, 115/255f, 204/255f, 1f); break;
+                    case 10: color = new Color(56/255f, 104/255f, 144/255f, 1f); break;
+                    case 11: color = new Color(58/255f, 48/255f, 111/255f, 1f); break;
+                    case 12: color = new Color(204/255f, 84/255f, 144/255f, 1f); break;
+                    case 13: color = new Color(204/255f, 16/255f, 117/255f, 1f); break;
+                    case 14: color = new Color(204/255f, 55/255f, 0/255f, 1f); break;
+                    case 15: color = new Color(204/255f, 112/255f, 0/255f, 1f); break;
+                    case 16: color = new Color(204/255f, 132/255f, 0/255f, 1f); break;
+                    case 17: color = new Color(204/255f, 172/255f, 0/255f, 1f); break;
+                    case 18: color = new Color(204/255f, 204/255f, 179/255f, 1f); break;
+                    case 19: color = new Color(204/255f, 200/255f, 200/255f, 1f); break;
+                    case 21: color = new Color(0f, 0f, 0f, 0f); break; // fallback transparent
                 }
 
-                isBright = false;
-                this.isMid = false;
-                isViolett = false;
+                boolBrightChance = false;
+                boolBrightViolettChance = false;
+                boolDarkViolettChance = false;
+                boolBlackChance = false;
 
 
                 switch (index) {
@@ -124,39 +131,40 @@ public class bgGenerator {
                     case 17:
                     case 18:
                     case 19:
-                        isBright = true;
+                        boolBrightChance = true;
                         break;
-                }
-
-                switch (index) {
                     case 1:
                     case 2:
                     case 10:
                     case 11:
-                        this.isMid = true;
+                        this.boolBrightViolettChance = true;
                         break;
-                }
-
-                switch (index) {
                     case 0:
                     case 4:
                     case 5:
                     case 7:
-                        isViolett = true;
+                        boolDarkViolettChance = true;
                         break;
+                    case 21:
+                        boolBlackChance = true;
                 }
 
-                if (index == 6 || (isBright && Math.random() < brightnessChance)) {
+
+                if (index == 6 || (boolBrightChance && Math.random() < BrightChance)) {
                     pixmap.setColor(color);
                     int rndPixelSize = (int)(Math.random() * (maxPixelSize - minPixelSize + 1)) + minPixelSize;
                     pixmap.fillRectangle(gridSize * row, gridSize * column, rndPixelSize, rndPixelSize);
-                } else if (this.isMid && Math.random() < isMid) {
+                } else if (this.boolBrightViolettChance && Math.random() < BrightViolettChance) {
                     pixmap.setColor(color);
                     int rndPixelSize = (int)(Math.random() * (maxPixelSize - minPixelSize + 1)) + minPixelSize;
                     pixmap.fillRectangle(gridSize * row, gridSize * column, rndPixelSize, rndPixelSize);
-                } else if (isViolett && Math.random() < violettChance) {
+                } else if (boolDarkViolettChance && Math.random() < DarkViolettChance) {
                     pixmap.setColor(color);
                     int rndPixelSize = (int)(Math.random() * (maxPixelSize - minPixelSize + 1)) + minPixelSize;
+                    pixmap.fillRectangle(gridSize * row, gridSize * column, rndPixelSize, rndPixelSize);
+                }  else if (boolBlackChance && Math.random() < BlackChance) {
+                    pixmap.setColor(color);
+                    int rndPixelSize = (int) (Math.random() * (maxPixelSize - minPixelSize + 1)) + minPixelSize;
                     pixmap.fillRectangle(gridSize * row, gridSize * column, rndPixelSize, rndPixelSize);
                 } else {
                     color = new Color(0/255f, 0/255f, 128/255f, 1f);
@@ -190,6 +198,19 @@ public class bgGenerator {
 
     private static double estimateChanceInverse(double probability, int trials) {
         return 1.0 / (1.0 - Math.pow(1.0 - probability, 1.0 / trials));
+    }
+
+    private float duplicateChanceDiminish(Color currentColor, Color lastCreatedColor){
+
+
+        if(currentColor.equals(lastCreatedColor)){
+            chance-= 20f;
+        } else {
+            chance = 100f;
+        }
+
+        return chance;
+
     }
 
 //    private Texture planetGen(){
