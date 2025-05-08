@@ -14,11 +14,11 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import java.security.interfaces.RSAMultiPrimePrivateCrtKey;
 import java.util.Random;
 
 import Background.bgGenerator;
 import Background.spaceBGGen;
+import HUD.JoyStick;
 import Player.player;
 
 public class startScreen implements ApplicationListener{
@@ -67,6 +67,8 @@ public class startScreen implements ApplicationListener{
         Random rand = new Random();
 
         int gridSize;
+        JoyStick js;
+        Vector2 jsCords;
 
         @Override
         public void create() {
@@ -77,7 +79,7 @@ public class startScreen implements ApplicationListener{
 
             deltaTime = Gdx.graphics.getDeltaTime();
 
-            shipSpeed = 300f;
+            shipSpeed = 20f;
 
             speed = 40;
             speed1 = 30;
@@ -91,14 +93,14 @@ public class startScreen implements ApplicationListener{
             spriteBatch = new SpriteBatch();
             viewport = new FitViewport(screenW, screenH);
 
-            worldWidth = viewport.getWorldWidth();
-            worldHeight = viewport.getWorldHeight();
-
             finalRefreshRate = Gdx.graphics.getDisplayMode().refreshRate;
 
 
             player player = new player();
             shipSprite = player.getSprite();
+
+            shipSprite.setCenter((screenW), screenH);
+
 
             dropSound = Gdx.audio.newSound(Gdx.files.internal("audioFiles/drop.mp3"));
 //            music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
@@ -132,6 +134,10 @@ public class startScreen implements ApplicationListener{
             starBackground = bg.starBackground(2, 2, 4, screenW, screenH*2, 0.005f, 0.005f, 0.5f, 0.1f);
             alphaBackground = bg.coloredBackground(screenW, screenH, new Color(0f,0f,0f,0.5f));
 
+
+            jsCords = new Vector2(screenW*0.1f, screenH*0.2f);
+            js = new JoyStick(150, jsCords);
+
         }
 
         @Override
@@ -142,7 +148,7 @@ public class startScreen implements ApplicationListener{
         @Override
         public void render() {
             if(anim) {
-                flyAnim();
+                flyAnim(2f, 400f);
             }
 
             backgroundDraw();
@@ -191,35 +197,49 @@ public class startScreen implements ApplicationListener{
 
 
 
+
             if(shipSprite.getY() >= 400){
                 enableInput = true;
             }
 
-            if (Gdx.input.isTouched() && enableInput) {
-                touchPos.set(Gdx.input.getX(), Gdx.input.getY());
-                viewport.unproject(touchPos);
-                shipSprite.setCenter(touchPos.x, touchPos.y);
+            if(enableInput){
+                if (Gdx.input.isTouched()) {
+                    touchPos.set(Gdx.input.getX(), Gdx.input.getY());
+                    viewport.unproject(touchPos);
+                    js.moveJoyStick(shipSprite, shipSpeed, touchPos);
+                }else{
+                    js.reset();
+                }
             }
+
         }
 
 
 
         private void draw() {
-            float worldWidth = viewport.getWorldWidth();
-            float worldHeight = viewport.getWorldHeight();
+            int worldWidth = screenW;
+            int worldHeight = screenH;
 
             viewport.apply();
             spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
             font.getData().setScale(3f);
             spriteBatch.begin();
 
-            font.draw(spriteBatch, "FPS: " + Gdx.graphics.getFramesPerSecond() + " SR: " + Gdx.graphics.getWidth() + " x " + Gdx.graphics.getHeight(), 20, worldHeight-30);
-            font.draw(spriteBatch, "PosX: " + shipSprite.getX() + " PoxY: " + shipSprite.getY() , 20, worldHeight-90);
-            font.draw(spriteBatch, "scrollX: " + scrollY + " scrollX1:" + scrollY1, 20, worldHeight-150);
+            font.draw(spriteBatch, "FPS: " + Gdx.graphics.getFramesPerSecond() + " SR: " + screenW + " x " + screenH, 20, screenH-30);
+            font.draw(spriteBatch, "PosX: " + (shipSprite.getX()+(shipSprite.getWidth()/2)) + " PoxY: " + (shipSprite.getY()+(shipSprite.getHeight()/2)) , 20, screenH-90);
+            font.draw(spriteBatch, "scrollX: " + scrollY + " scrollX1:" + scrollY1, 20, screenH-150);
+            font.draw(spriteBatch, "isPressed?: " + js.getInput() +" firstTouch: " + js.getFirstTouch(), 20, screenH-210);
+
             shipSprite.draw(spriteBatch);
 
 
             spriteBatch.end();
+
+
+            js.draw();
+
+
+
         }
 
 
@@ -231,19 +251,19 @@ public class startScreen implements ApplicationListener{
 
         spriteBatch.begin();
 
-        spriteBatch.draw(starBackground, worldWidth / 2f - starBackground.getWidth() / 2f, (worldHeight - starBackground.getHeight() / 2f) - scrollSkyTexture);
+        spriteBatch.draw(starBackground, screenW / 2f - starBackground.getWidth() / 2f, (screenH - starBackground.getHeight() / 2f) - scrollSkyTexture);
 
-        spriteBatch.draw(alphaBackground, worldWidth / 2f - starBackground.getWidth() / 2f, worldHeight - starBackground.getHeight() / 2f);
+        spriteBatch.draw(alphaBackground, screenW / 2f - starBackground.getWidth() / 2f, screenH - starBackground.getHeight() / 2f);
 
-        spriteBatch.draw(backgroundTexture1, 0, -scrollY, worldWidth, worldHeight);
-        spriteBatch.draw(backgroundTexture1, 0, worldHeight-scrollY, worldWidth, worldHeight);
+        spriteBatch.draw(backgroundTexture1, 0, -scrollY, screenW, screenH);
+        spriteBatch.draw(backgroundTexture1, 0, screenH-scrollY, screenW, screenH);
 
 
-        spriteBatch.draw(backgroundTexture2, 0, -scrollY1, worldWidth, worldHeight);
-        spriteBatch.draw(backgroundTexture2, 0, worldHeight-scrollY1, worldWidth, worldHeight);
+        spriteBatch.draw(backgroundTexture2, 0, -scrollY1, screenW, screenH);
+        spriteBatch.draw(backgroundTexture2, 0, screenH-scrollY1, screenW, screenH);
 
-        spriteBatch.draw(backgroundTexture3, 0, -scrollY2, worldWidth, worldHeight);
-        spriteBatch.draw(backgroundTexture3, 0, worldHeight-scrollY2, worldWidth, worldHeight);
+        spriteBatch.draw(backgroundTexture3, 0, -scrollY2, screenW, screenH);
+        spriteBatch.draw(backgroundTexture3, 0, screenH-scrollY2, screenW, screenH);
 
 
 //        spriteBatch.draw(planet4, 300-gridSize, -100);
@@ -257,35 +277,38 @@ public class startScreen implements ApplicationListener{
     private void updateBGPos() {
         deltaTime = Gdx.graphics.getDeltaTime();
         scrollY += speed * deltaTime;
-        if(scrollY >= worldHeight){
+        if(scrollY >= screenH){
             scrollY = 0;
         }
 
         scrollY1 += speed1 * deltaTime;
-        if(scrollY1 >= worldHeight){
+        if(scrollY1 >= screenH){
             scrollY1 = 0;
         }
 
         scrollY2 += speed2 * deltaTime;
-        if(scrollY2 >= worldHeight){
+        if(scrollY2 >= screenH){
             scrollY2 = 0;
         }
 
         scrollSkyTexture += speedSky * deltaTime;
-        if(scrollSkyTexture >= worldHeight){
+        if(scrollSkyTexture >= screenH){
             scrollSkyTexture = 0;
         }
 
     }
 
-    private void flyAnim() {
+    private void flyAnim(float time, float FlyingYPos) {
 
-        shipSprite.translateY(shipSpeed*deltaTime);
-
-        if(shipSprite.getY() >= 404){
+        if(shipSprite.getY() >= 400){
             anim = false;
         }
 
+        float t = Math.min(Gdx.graphics.getDeltaTime() / time, 1f);
+
+        float posY = shipSprite.getY() + (FlyingYPos - shipSprite.getY()) * circOut(t);
+
+        shipSprite.setY(posY);
     }
 
     public void logic(){
@@ -298,6 +321,10 @@ public class startScreen implements ApplicationListener{
 
     private void createCollison(){
 
+    }
+
+    public float circOut(float t) {
+        return (float)Math.sqrt(1 - (t - 1) * (t - 1));
     }
 
 }

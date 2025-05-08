@@ -11,15 +11,22 @@ public class player implements Disposable {
 
     Texture shipTexture;
     Sprite shipSprite;
+    float sizeX;
+    float sizeY;
 
     Rectangle bounds;
 
     public player(){
 
+        sizeX = (float)Gdx.graphics.getWidth()/10;
+        sizeY = (float)Gdx.graphics.getHeight()/10;
+
         shipTexture = new Texture("Player/ship.png");
         shipSprite = new Sprite(shipTexture);
-        shipSprite.setCenter(1600 , 300);
-        shipSprite.setSize((float)Gdx.graphics.getWidth()/10, (float)Gdx.graphics.getWidth()/10);
+
+        shipSprite.setSize(sizeX, sizeX);
+        shipSprite.setOriginCenter();
+
 
         bounds = new Rectangle(shipSprite.getX(), shipSprite.getY(), shipSprite.getWidth(), shipSprite.getHeight());
 
@@ -61,5 +68,13 @@ public class player implements Disposable {
         if (shipTexture != null) {
             shipTexture.dispose();
         }
+    }
+
+    public float getSizeX(){
+        return sizeX;
+    }
+
+    public void getSizeY(){
+
     }
 }
