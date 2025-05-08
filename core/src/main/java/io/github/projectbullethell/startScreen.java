@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.graphics.Color;
@@ -18,6 +19,7 @@ import java.util.Random;
 
 import Background.bgGenerator;
 import Background.spaceBGGen;
+import HUD.Button;
 import HUD.JoyStick;
 import Player.player;
 
@@ -69,6 +71,10 @@ public class startScreen implements ApplicationListener{
         int gridSize;
         JoyStick js;
         Vector2 jsCords;
+
+        Button button;
+
+        Vector2 buttonCords;
 
         @Override
         public void create() {
@@ -137,6 +143,11 @@ public class startScreen implements ApplicationListener{
 
             jsCords = new Vector2(screenW*0.1f, screenH*0.2f);
             js = new JoyStick(150, jsCords);
+
+            buttonCords = new Vector2(screenW -200f, 200f);
+            button = new Button(200, buttonCords);
+
+
 
         }
 
@@ -237,6 +248,8 @@ public class startScreen implements ApplicationListener{
 
 
             js.draw();
+
+            button.draw();
 
 
 
