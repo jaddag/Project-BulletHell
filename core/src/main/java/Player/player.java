@@ -17,7 +17,6 @@ public class player implements Disposable {
     Rectangle bounds;
 
     public player(){
-
         sizeX = (float)Gdx.graphics.getWidth()/10;
         sizeY = (float)Gdx.graphics.getHeight()/10;
 
@@ -27,9 +26,7 @@ public class player implements Disposable {
         shipSprite.setSize(sizeX, sizeX);
         shipSprite.setOriginCenter();
 
-
         bounds = new Rectangle(shipSprite.getX(), shipSprite.getY(), shipSprite.getWidth(), shipSprite.getHeight());
-
     }
 
     public void update(float delta) {

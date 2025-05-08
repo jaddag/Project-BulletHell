@@ -42,7 +42,10 @@ public class JoyStick{
     }
 
     public void moveJoyStick (Sprite sprite, float speed, Vector2 touchPos) {
-
+        if (!Gdx.input.isTouched() || !touchArea.contains(touchPos)) {
+            inputJoyStick = false;
+            return;
+        }
 
         if (Gdx.input.isTouched()) {
             if (touchArea.contains(touchPos)) {
@@ -56,6 +59,7 @@ public class JoyStick{
             inputJoyStick = false;
         }
 
+
         if (inputJoyStick) {
 
             smallCircleCords.set(touchPos);
@@ -64,11 +68,13 @@ public class JoyStick{
                 bigCircleCords.set(touchPos);
                 smallCircleCords.set(bigCircleCords);
                 firstTouch = false;
+                return;
             }
         }
 
+
         if (touchingJoyStick) {
-            smallCircleCords = touchPos;
+            smallCircleCords.set(touchPos);
 
             //Wenn man außerhalb des Joysticks geht
         } else {
@@ -77,6 +83,7 @@ public class JoyStick{
             smallCircleCords.x = bigCircleCords.x + MathUtils.cos(angle) * radiusBigCircle;
             smallCircleCords.y = bigCircleCords.y + MathUtils.sin(angle) * radiusBigCircle;
         }
+
 
                     //Führt Animation aus je nach Direction
 //            direction = new Vector2(smallCircleCords).sub(bigCircleCords);

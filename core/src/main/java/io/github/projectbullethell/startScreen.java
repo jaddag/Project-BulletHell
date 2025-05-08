@@ -99,7 +99,7 @@ public class startScreen implements ApplicationListener{
             player player = new player();
             shipSprite = player.getSprite();
 
-            shipSprite.setCenter((screenW), screenH);
+            shipSprite.setCenter(screenW/2f, screenH/2f);
 
 
             dropSound = Gdx.audio.newSound(Gdx.files.internal("audioFiles/drop.mp3"));
@@ -148,7 +148,7 @@ public class startScreen implements ApplicationListener{
         @Override
         public void render() {
             if(anim) {
-                flyAnim(2f, 400f);
+//                flyAnim(20f, 400f);
             }
 
             backgroundDraw();
