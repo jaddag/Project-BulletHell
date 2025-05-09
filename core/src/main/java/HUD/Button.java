@@ -21,8 +21,7 @@ public class Button {
 
     public Button(int buttonSize, Vector2 buttonPos) {
 
-
-         shapeRendererButton = new ShapeRenderer();
+        shapeRendererButton = new ShapeRenderer();
 
 
         this.buttonPos = new Vector2(buttonPos);
@@ -38,7 +37,7 @@ public class Button {
     }
 
     public void draw() {
-
+        //hallo
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 

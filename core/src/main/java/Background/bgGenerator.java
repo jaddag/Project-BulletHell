@@ -162,12 +162,9 @@ public class bgGenerator {
         Pixmap pixmap = new Pixmap(sizeX , sizeY, Pixmap.Format.RGBA8888);
         Color color = new Color();
 
-
         for (int column = 0; column < sizeY; column++ ){
             for (int row = 0; row < sizeX; row++){
                 int index = (int)(Math.random() * 22);
-
-
 
                 switch (index) {
                     case 0:  color = new Color(62/255f, 32/255f, 88/255f, 1f); break;
@@ -193,13 +190,10 @@ public class bgGenerator {
                     case 21: color = new Color(0/255f, 0/255f, 90/255f, 1f); break; // darkblue
                 }
 
-
-
                 boolBrightChance = false;
                 boolBrightViolettChance = false;
                 boolDarkViolettChance = false;
                 boolBlackChance = false;
-
 
                 switch (index) {
                     case 3:
@@ -231,7 +225,6 @@ public class bgGenerator {
                         boolBlackChance = true;
                 }
 
-
                 if (index == 6 || (boolBrightChance && Math.random()*10 < BrightChance)) {
                     pixmap.setColor(color);
                     int rndPixelSize = (int)(Math.random() * (maxPixelSize - minPixelSize + 1)) + minPixelSize;
@@ -254,7 +247,6 @@ public class bgGenerator {
                 }
 
                 lastColor = color;
-
             }
         }
 
@@ -262,20 +254,15 @@ public class bgGenerator {
         pixmap.dispose();
 
         return backgroundTexture;
-
     }
 
     private Texture planet(){
 
         Pixmap p = new Pixmap(4, 4, Pixmap.Format.RGBA8888);
-
         p.setColor(1f, 1f, 1f, 0.5f); // RGBA values between 0–1
-
         p.fillRectangle(0, 0, 4, 4);
-
         Texture t = new Texture(p);
         p.dispose();
-
 
         return t;
     }
@@ -294,10 +281,5 @@ public class bgGenerator {
         return chance / 100f;
     }
 
-//    private Texture planetGen(){
-//
-//
-//
-//    }
 
 }

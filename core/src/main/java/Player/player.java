@@ -71,7 +71,7 @@ public class player implements Disposable {
         return sizeX;
     }
 
-    public void getSizeY(){
-
+    public float getSizeY(){
+        return sizeY;
     }
 }

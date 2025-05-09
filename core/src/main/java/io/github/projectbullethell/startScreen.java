@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.graphics.Color;
@@ -71,10 +70,6 @@ public class startScreen implements ApplicationListener{
         int gridSize;
         JoyStick js;
         Vector2 jsCords;
-
-        Button button;
-
-        Vector2 buttonCords;
 
         @Override
         public void create() {
@@ -144,11 +139,13 @@ public class startScreen implements ApplicationListener{
             jsCords = new Vector2(screenW*0.1f, screenH*0.2f);
             js = new JoyStick(150, jsCords);
 
+            flyElapsed = 0f;
+
+            time = 0;
+            timeCount = 0;
+
             buttonCords = new Vector2(screenW -200f, 200f);
             button = new Button(200, buttonCords);
-
-
-
         }
 
         @Override
@@ -158,8 +155,19 @@ public class startScreen implements ApplicationListener{
 
         @Override
         public void render() {
-            if(anim) {
-//                flyAnim(2f, 400f);
+            if (anim) {
+                if (animStart) {
+                    flyStartY = shipSprite.getY();
+                    flyElapsed = 0f;
+                    animStart = false;
+                }
+                flyAnim(2f, 400f, 0.02f);
+            }
+
+            timeCount++;
+            if(timeCount == 60){
+                time++;
+                timeCount =0;
             }
 
             backgroundDraw();
@@ -209,9 +217,9 @@ public class startScreen implements ApplicationListener{
 
 
 
-            if(shipSprite.getY() >= 400){
-                enableInput = true;
-            }
+//            if(shipSprite.getY() >= 400){
+//                enableInput = true;
+//            }
 
             if(enableInput){
                 if (Gdx.input.isTouched()) {
@@ -248,8 +256,6 @@ public class startScreen implements ApplicationListener{
 
 
             js.draw();
-
-            button.draw();
 
 
 
