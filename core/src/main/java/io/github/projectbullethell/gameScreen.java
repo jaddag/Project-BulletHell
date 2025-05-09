@@ -1,6 +1,7 @@
 package io.github.projectbullethell;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -10,19 +11,20 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import java.util.Random;
 
 import Background.bgGenerator;
-import Background.spaceBGGen;
 import HUD.Button;
 import HUD.JoyStick;
+import MainMethod.BulletHellMain;
 import Player.player;
 
-public class startScreen implements ApplicationListener{
+public class gameScreen implements Screen {
+        private final BulletHellMain game;
 
         Texture backgroundTexture1;
         Texture backgroundTexture2;
@@ -71,80 +73,84 @@ public class startScreen implements ApplicationListener{
         JoyStick js;
         Vector2 jsCords;
 
+        float flyElapsed;
+
+        int time;
+        int timeCount;
+        Vector2 buttonCords;
+        Button button;
+
+    public gameScreen(BulletHellMain game) {
+        this.game = game;
+    }
+
         @Override
-        public void create() {
-            anim = true;
-            enableInput = false;
+    public void show() {
+        anim = true;
+        enableInput = true;
 
-            scrollY = 0;
+        gridSize = 10;
 
-            deltaTime = Gdx.graphics.getDeltaTime();
+        scrollY = 0;
 
-            shipSpeed = 20f;
+        flyElapsed = 0f;
+        time = 0;
+        timeCount = 0;
 
-            speed = 40;
-            speed1 = 30;
-            speed2 = 20f;
-            speedSky = 10f;
+        deltaTime = Gdx.graphics.getDeltaTime();
 
-            screenW = Gdx.graphics.getWidth();
-            screenH = Gdx.graphics.getHeight();
+        shipSpeed = 20f;
+        speed = 40;
+        speed1 = 30;
+        speed2 = 20f;
+        speedSky = 10f;
 
-            font = new BitmapFont(); // default font
-            spriteBatch = new SpriteBatch();
-            viewport = new FitViewport(screenW, screenH);
+        screenW = Gdx.graphics.getWidth();
+        screenH = Gdx.graphics.getHeight();
+        finalRefreshRate = Gdx.graphics.getDisplayMode().refreshRate;
 
-            finalRefreshRate = Gdx.graphics.getDisplayMode().refreshRate;
+        font = new BitmapFont();
 
+        viewport = new FitViewport(screenW, screenH);
 
-            player player = new player();
-            shipSprite = player.getSprite();
+        spriteBatch = new SpriteBatch();
+        player player = new player();
+        shipSprite = player.getSprite();
+        shipSprite.setCenter((screenW), screenH);
 
-            shipSprite.setCenter((screenW), screenH);
-
-
-            dropSound = Gdx.audio.newSound(Gdx.files.internal("audioFiles/drop.mp3"));
+//            dropSound = Gdx.audio.newSound(Gdx.files.internal("audioFiles/drop.mp3"));
 //            music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
 
+        touchPos = new Vector2();
 
-            touchPos = new Vector2();
+        //paralaxx
+        getBG();
 
-            spaceBGGen plGen = new spaceBGGen();
+        //HUD
+        HUD();
+    }
 
-            bgGenerator bg = new bgGenerator();
+    public void getBG(){
+        AssetManager assetManager = game.assetManager;
 
-            //paralaxx
-            try {
-                backgroundTexture3 = bg.starGen(100, 22, 0.2f, 33, false, 5, 3, false);
-                backgroundTexture2 = bg.starGen(10, 20, 0.4f, 33, false, 7, 4, false);
-                backgroundTexture1 = bg.starGen(rand.nextInt() * 1000, 17, 0.6f, 63, true, 9, 5, false);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+        assetManager.load("cache/background1.png", Texture.class);
+        assetManager.load("cache/background2.png", Texture.class);
+        assetManager.load("cache/background3.png", Texture.class);
+        assetManager.load("cache/starBackground.png", Texture.class);
+        assetManager.load("cache/alphaBG.png", Texture.class);
+        assetManager.finishLoading();
 
-            gridSize = 10;
+        backgroundTexture1 = assetManager.get("cache/background1.png", Texture.class);
+        backgroundTexture2 = assetManager.get("cache/background2.png", Texture.class);
+        backgroundTexture3 = assetManager.get("cache/background3.png", Texture.class);
+        starBackground = assetManager.get("cache/starBackground.png", Texture.class);
+        alphaBackground = assetManager.get("cache/alphaBG.png", Texture.class);
+    }
 
-            shipRectangle = new Rectangle();
-            planetRectangle = new Rectangle();
-
-            planet1 = plGen.Nebula(gridSize);
-//            planet2 = plGen.Jupiter(gridSize);
-//            planet3 = plGen.Saturn(gridSize);
-//            planet4 = plGen.Sun(gridSize);
-
-            starBackground = bg.starBackground(2, 2, 4, screenW, screenH*2, 0.005f, 0.005f, 0.5f, 0.1f);
-            alphaBackground = bg.coloredBackground(screenW, screenH, new Color(0f,0f,0f,0.5f));
-
-
+        public void HUD(){
+            buttonCords = new Vector2(screenW -200f, 200f);
             jsCords = new Vector2(screenW*0.1f, screenH*0.2f);
             js = new JoyStick(150, jsCords);
-
-            flyElapsed = 0f;
-
-            time = 0;
-            timeCount = 0;
-
-            buttonCords = new Vector2(screenW -200f, 200f);
             button = new Button(200, buttonCords);
         }
 
@@ -154,68 +160,45 @@ public class startScreen implements ApplicationListener{
         }
 
         @Override
-        public void render() {
-            if (anim) {
-                if (animStart) {
-                    flyStartY = shipSprite.getY();
-                    flyElapsed = 0f;
-                    animStart = false;
-                }
-                flyAnim(2f, 400f, 0.02f);
-            }
-
-            timeCount++;
-            if(timeCount == 60){
-                time++;
-                timeCount =0;
-            }
+        public void render(float delta) {
+//            if (anim) {
+//                if (animStart) {
+//                    flyStartY = shipSprite.getY();
+//                    flyElapsed = 0f;
+//                    animStart = false;
+//                }
+//                flyAnim(2f, 400f, 0.02f);
+//            }
+//
+//            timeCount++;
+//            if(timeCount == 60){
+//                time++;
+//                timeCount =0;
+//            }
 
             backgroundDraw();
             updateBGPos();
             input();
-//		    logic();
             draw();
 
         }
 
 
-    @Override
-        public void pause() {
-            // TODO Auto-generated method stub
-
-        }
+        @Override
+        public void pause() {}
 
         @Override
-        public void resume() {
-            // TODO Auto-generated method stub
-
-        }
+        public void resume() {}
 
         @Override
         public void dispose() {
             backgroundTexture1.dispose();
-            dropTexture.dispose();
+            if (dropTexture != null) dropTexture.dispose();
             spriteBatch.dispose();
 
         }
 
         private void input() {
-            float worldWidth = viewport.getWorldWidth();
-
-//            if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-//
-//                shipSprite.translateX(speed * deltaTime);
-//
-//
-//
-//            } else if (Gdx.input.isKeyPressed(Input.Keys.A)){
-//
-//                if(shipSprite.getX()!= 0 && shipSprite.getX()!= worldWidth) shipSprite.translateX(-speed * deltaTime);
-//
-//            }
-
-
-
 
 //            if(shipSprite.getY() >= 400){
 //                enableInput = true;
@@ -233,12 +216,7 @@ public class startScreen implements ApplicationListener{
 
         }
 
-
-
         private void draw() {
-            int worldWidth = screenW;
-            int worldHeight = screenH;
-
             viewport.apply();
             spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
             font.getData().setScale(3f);
@@ -251,28 +229,23 @@ public class startScreen implements ApplicationListener{
 
             shipSprite.draw(spriteBatch);
 
-
             spriteBatch.end();
 
-
             js.draw();
-
-
-
         }
 
 
     private void backgroundDraw() {
-
         ScreenUtils.clear(Color.BLACK);
         viewport.apply();
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
 
         spriteBatch.begin();
 
-        spriteBatch.draw(starBackground, screenW / 2f - starBackground.getWidth() / 2f, (screenH - starBackground.getHeight() / 2f) - scrollSkyTexture);
+        spriteBatch.draw(starBackground, 0, -scrollSkyTexture, screenW, screenH);
+        spriteBatch.draw(starBackground, 0, screenH-scrollSkyTexture, screenW, screenH);
 
-        spriteBatch.draw(alphaBackground, screenW / 2f - starBackground.getWidth() / 2f, screenH - starBackground.getHeight() / 2f);
+        spriteBatch.draw(alphaBackground,0,0, screenW, screenH);
 
         spriteBatch.draw(backgroundTexture1, 0, -scrollY, screenW, screenH);
         spriteBatch.draw(backgroundTexture1, 0, screenH-scrollY, screenW, screenH);
@@ -284,13 +257,11 @@ public class startScreen implements ApplicationListener{
         spriteBatch.draw(backgroundTexture3, 0, -scrollY2, screenW, screenH);
         spriteBatch.draw(backgroundTexture3, 0, screenH-scrollY2, screenW, screenH);
 
-
 //        spriteBatch.draw(planet4, 300-gridSize, -100);
 //        spriteBatch.draw(planet2, 400-gridSize, -200);
 //        spriteBatch.draw(planet3, 1700-gridSize, -100);
 
         spriteBatch.end();
-
     }
 
     private void updateBGPos() {
@@ -314,11 +285,9 @@ public class startScreen implements ApplicationListener{
         if(scrollSkyTexture >= screenH){
             scrollSkyTexture = 0;
         }
-
     }
 
     private void flyAnim(float time, float FlyingYPos) {
-
         if(shipSprite.getY() >= 400){
             anim = false;
         }
@@ -346,4 +315,8 @@ public class startScreen implements ApplicationListener{
         return (float)Math.sqrt(1 - (t - 1) * (t - 1));
     }
 
+    @Override
+    public void hide() {
+        // Optional: implement if needed
+    }
 }

@@ -77,7 +77,7 @@ public class bgGenerator {
         return backgroundTexture;
     }
 
-    public Texture starGen(int seed, int particleAmount, float alphaValue, float  planetSpawnRate , boolean planet, int maxPixelSize, int minPixelSize, boolean t) throws Exception{
+    public Pixmap starGen(int seed, int particleAmount, float alphaValue, float  planetSpawnRate , boolean planet, int maxPixelSize, int minPixelSize, boolean t) throws Exception{
 
         if(particleAmount<0 || alphaValue<0 || planetSpawnRate<0 || maxPixelSize<0 || minPixelSize<0 || minPixelSize>maxPixelSize){
             throw new WrongInputEE("Value cant be below 0");
@@ -140,24 +140,18 @@ public class bgGenerator {
 
         }
 
-        Texture backgroundTexture = new Texture(pixmap);
-        pixmap.dispose();
-
-        return backgroundTexture;
+        return pixmap;
     }
 
-    public Texture coloredBackground(int sizeX, int sizeY, Color color){
+    public Pixmap coloredBackground(int sizeX, int sizeY, Color color){
         Pixmap pixmap = new Pixmap(sizeX, sizeY, Pixmap.Format.RGBA8888);
         pixmap.setColor(color);
         pixmap.fill();
 
-        Texture texture = new Texture(pixmap);
-        pixmap.dispose();
-
-        return texture;
+        return pixmap;
     }
 
-    public Texture starBackground(int gridSize,  int minPixelSize, int maxPixelSize, int sizeX, int sizeY, float BrightChance, float BrightViolettChance, float DarkViolettChance, float BlackChance){
+    public Pixmap starBackground(int gridSize,  int minPixelSize, int maxPixelSize, int sizeX, int sizeY, float BrightChance, float BrightViolettChance, float DarkViolettChance, float BlackChance){
 
         Pixmap pixmap = new Pixmap(sizeX , sizeY, Pixmap.Format.RGBA8888);
         Color color = new Color();
@@ -250,10 +244,7 @@ public class bgGenerator {
             }
         }
 
-        Texture backgroundTexture = new Texture(pixmap);
-        pixmap.dispose();
-
-        return backgroundTexture;
+        return pixmap;
     }
 
     private Texture planet(){
