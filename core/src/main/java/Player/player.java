@@ -7,20 +7,28 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Disposable;
 
+import Background.spaceBGGen;
+
 public class player implements Disposable {
 
     Texture shipTexture;
     Sprite shipSprite;
     float sizeX;
     float sizeY;
-
+    spaceBGGen bg;
+    playerArrayList pal;
     Rectangle bounds;
 
     public player(){
         sizeX = (float)Gdx.graphics.getWidth()/10;
         sizeY = (float)Gdx.graphics.getHeight()/10;
 
+        bg = new spaceBGGen();
+        pal = new playerArrayList();
+        pal.load();
+//        shipTexture = bg.genTexture(30, pal.getArrayList());
         shipTexture = new Texture("Player/ship.png");
+
         shipSprite = new Sprite(shipTexture);
 
         shipSprite.setSize(sizeX, sizeX);

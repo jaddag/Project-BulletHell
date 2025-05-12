@@ -116,7 +116,7 @@ public class gameScreen implements Screen {
         spriteBatch = new SpriteBatch();
         player player = new player();
         shipSprite = player.getSprite();
-        shipSprite.setCenter((screenW), screenH);
+        shipSprite.setCenter((screenW/2), screenH/2);
 
 //            dropSound = Gdx.audio.newSound(Gdx.files.internal("audioFiles/drop.mp3"));
 //            music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
