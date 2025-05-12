@@ -3,7 +3,6 @@ package HUD;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -11,7 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import com.badlogic.gdx.graphics.Color;
 
-public class JoyStick{
+public class joyStick {
 
     Rectangle touchArea;
     ShapeRenderer shapeRendererJoystick;
@@ -26,7 +25,7 @@ public class JoyStick{
     boolean firstTouch;
 
 
-    public JoyStick(int buttonSize, Vector2 cords){
+    public joyStick(int buttonSize, Vector2 cords){
 
         shapeRendererJoystick = new ShapeRenderer();
         resetCords = new Vector2(cords);

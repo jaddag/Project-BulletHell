@@ -3,14 +3,13 @@ package HUD;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
-public class Button {
+public class button {
 
     Stage stage;
     Skin skin;
@@ -20,7 +19,7 @@ public class Button {
 
     ShapeRenderer shapeRendererButton;
 
-    public Button(int buttonSize, Vector2 buttonPos) {
+    public button(int buttonSize, Vector2 buttonPos) {
 
         shapeRendererButton = new ShapeRenderer();
 

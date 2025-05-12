@@ -2,11 +2,10 @@ package io.github.projectbullethell.android;
 
 import android.os.Bundle;
 
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
-import MainMethod.BulletHellMain;
+import MainMethod.bulletHellMain;
 
 /** Launches the Android application. */
 public class AndroidLauncher extends AndroidApplication {
@@ -21,6 +20,6 @@ public class AndroidLauncher extends AndroidApplication {
         config.useImmersiveMode = true;
         config.numSamples = 2;
 
-        initialize(new BulletHellMain(), config);
+        initialize(new bulletHellMain(), config);
     }
 }

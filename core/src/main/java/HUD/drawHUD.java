@@ -22,8 +22,8 @@ public class drawHUD {
     private String dev;
     private Sprite shipSprite;
     private boolean enableInput;
-    private JoyStick js;
-    private Button button;
+    private joyStick js;
+    private HUD.button button;
     private float shipSpeed;
     private float size;
     private boolean enableDevStats;
@@ -37,8 +37,8 @@ public class drawHUD {
 
         size = 2f;
 
-        js = new JoyStick(150, joyStickCords);
-        button = new Button(200, buttonCords);
+        js = new joyStick(150, joyStickCords);
+        button = new button(200, buttonCords);
 
         this.enableInput = enableInput;
         this.enableDevStats = enableDevStats;

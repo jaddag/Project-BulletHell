@@ -1,8 +1,6 @@
 package MainMethod;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
@@ -10,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import io.github.projectbullethell.loadingScreen;
 
-public class BulletHellMain extends Game {
+public class bulletHellMain extends Game {
 
     public SpriteBatch batch;
     public AssetManager assetManager;

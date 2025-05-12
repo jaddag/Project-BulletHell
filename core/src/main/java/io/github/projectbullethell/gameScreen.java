@@ -17,14 +17,14 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import java.util.Random;
 
-import HUD.Button;
-import HUD.JoyStick;
+import HUD.joyStick;
 import HUD.drawHUD;
-import MainMethod.BulletHellMain;
+import MainMethod.bulletHellMain;
 import Player.player;
+import camera.camera;
 
 public class gameScreen implements Screen {
-        private final BulletHellMain game;
+        private final bulletHellMain game;
 
         Texture backgroundTexture1;
         Texture backgroundTexture2;
@@ -61,6 +61,7 @@ public class gameScreen implements Screen {
 
         SpriteBatch spriteBatch;
         FitViewport viewport;
+        camera camera;
 
         Rectangle shipRectangle;
         Rectangle planetRectangle;
@@ -70,7 +71,7 @@ public class gameScreen implements Screen {
         Random rand = new Random();
 
         int gridSize;
-        JoyStick js;
+        joyStick js;
         Vector2 jsCords;
 
         float flyElapsed;
@@ -80,11 +81,9 @@ public class gameScreen implements Screen {
         Vector2 buttonCords;
         Vector2 button2Cords;
 
-    Button button;
-
         drawHUD drawHUD;
 
-    public gameScreen(BulletHellMain game) {
+    public gameScreen(bulletHellMain game) {
         this.game = game;
     }
 
@@ -115,12 +114,15 @@ public class gameScreen implements Screen {
 
         font = new BitmapFont();
 
-        viewport = new FitViewport(screenW, screenH);
-
         spriteBatch = new SpriteBatch();
+
         player player = new player();
         shipSprite = player.getSprite();
         shipSprite.setCenter((screenW/2), screenH/2);
+
+        camera = new camera(shipSprite);
+
+        viewport = new FitViewport(screenW, screenH, camera.getCamera());
 
 //            dropSound = Gdx.audio.newSound(Gdx.files.internal("audioFiles/drop.mp3"));
 //            music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
@@ -151,24 +153,24 @@ public class gameScreen implements Screen {
         alphaBackground = assetManager.get("cache/alphaBG.png", Texture.class);
     }
 
-        public void HUD(){
-            buttonCords = new Vector2(screenW -200f, 200f);
-            button2Cords = new Vector2(0f,0f);
-            jsCords = new Vector2(screenW*0.1f, screenH*0.2f);
+    public void HUD(){
+        buttonCords = new Vector2(screenW -200f, 200f);
+        button2Cords = new Vector2(0f,0f);
+        jsCords = new Vector2(screenW*0.1f, screenH*0.2f);
 
-            drawHUD = new drawHUD(true, enableInput, jsCords, buttonCords);
-            drawHUD.setShipSpeed(shipSpeed);
-            drawHUD.setShipSprite(shipSprite);
-        }
+        drawHUD = new drawHUD(true, enableInput, jsCords, buttonCords);
+        drawHUD.setShipSpeed(shipSpeed);
+        drawHUD.setShipSprite(shipSprite);
+    }
 
-        @Override
-        public void resize(int width, int height) {
-            viewport.update(width, height, true);
-            drawHUD.getHudViewport().update(width, height, true);
-        }
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height, true);
+        drawHUD.getHudViewport().update(width, height, true);
+    }
 
-        @Override
-        public void render(float delta) {
+    @Override
+    public void render(float delta) {
 //            if (anim) {
 //                if (animStart) {
 //                    flyStartY = shipSprite.getY();
@@ -184,52 +186,59 @@ public class gameScreen implements Screen {
 //                timeCount =0;
 //            }
 
-            backgroundDraw();
-            updateBGPos();
-            Overlay();
-            draw();
+        backgroundDraw();
+        updateBGPos();
+        headUpDisplay();
+        updateCamera();
+        draw();
+    }
+
+
+    @Override
+    public void pause() {}
+
+    @Override
+    public void resume() {}
+
+    @Override
+    public void dispose() {
+        backgroundTexture1.dispose();
+        if (dropTexture != null) dropTexture.dispose();
+        spriteBatch.dispose();
+        drawHUD.getSpriteBatch().dispose();
+
+    }
+
+    private void headUpDisplay() {
+        if (Gdx.input.isTouched()) {
+            touchPos.set(Gdx.input.getX(), Gdx.input.getY());
         }
 
+        drawHUD.getHudViewport().apply();
+        drawHUD.draw(touchPos);
 
-        @Override
-        public void pause() {}
+        drawHUD.devConsole("X: " + camera.getCameraPos().x + "Y: " + camera.getCameraPos().y);
 
-        @Override
-        public void resume() {}
+    }
 
-        @Override
-        public void dispose() {
-            backgroundTexture1.dispose();
-            if (dropTexture != null) dropTexture.dispose();
-            spriteBatch.dispose();
-            drawHUD.getSpriteBatch().dispose();
-
-        }
-
-        private void Overlay() {
-            if (Gdx.input.isTouched()) {
-                touchPos.set(Gdx.input.getX(), Gdx.input.getY());
-            }
-
-            drawHUD.getHudViewport().apply();
-            drawHUD.draw(touchPos);
-        }
-
-        private void draw() {
-            viewport.apply();
-            spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
-            font.getData().setScale(3f);
-            spriteBatch.begin();
+    private void draw() {
+        viewport.apply();
+        spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
+        font.getData().setScale(3f);
+        spriteBatch.begin();
 
 //            font.draw(spriteBatch, "FPS: " + Gdx.graphics.getFramesPerSecond() + " SR: " + screenW + " x " + screenH, 20, screenH - 30);
 //            font.draw(spriteBatch, "PosX: " + (shipSprite.getX() + (shipSprite.getWidth() / 2)) + " PoxY: " + (shipSprite.getY() + (shipSprite.getHeight() / 2)), 20, screenH - 90);
 //            font.draw(spriteBatch, "dev Options:" , 20, screenH - 210);
 
-            shipSprite.draw(spriteBatch);
+        shipSprite.draw(spriteBatch);
 
-            spriteBatch.end();
-        }
+        spriteBatch.end();
+    }
 
+    private void updateCamera(){
+        camera.update( 1f, 1f);
+    }
 
     private void backgroundDraw() {
         ScreenUtils.clear(Color.BLACK);
@@ -241,7 +250,7 @@ public class gameScreen implements Screen {
         spriteBatch.draw(starBackground, 0, -scrollSkyTexture, screenW, screenH);
         spriteBatch.draw(starBackground, 0, screenH-scrollSkyTexture, screenW, screenH);
 
-        spriteBatch.draw(alphaBackground,0,0, screenW, screenH);
+        spriteBatch.draw(alphaBackground,camera.getCameraPos().x-((float) screenW /2),camera.getCameraPos().y-((float) screenH /2), screenW, screenH);
 
         spriteBatch.draw(backgroundTexture1, 0, -scrollY, screenW, screenH);
         spriteBatch.draw(backgroundTexture1, 0, screenH-scrollY, screenW, screenH);
@@ -281,8 +290,6 @@ public class gameScreen implements Screen {
         if(scrollSkyTexture >= screenH){
             scrollSkyTexture = 0;
         }
-
-        drawHUD.devConsole("S1: " + scrollY + "S2: " + scrollY1 + "S3: " + scrollY2);
     }
 
     private void flyAnim(float time, float FlyingYPos) {
@@ -303,10 +310,6 @@ public class gameScreen implements Screen {
         if (shipRectangle.overlaps(planetRectangle)){
             dropSound.play();
         }
-    }
-
-    private void createCollison(){
-
     }
 
     public float circOut(float t) {

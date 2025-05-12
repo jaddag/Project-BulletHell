@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 import java.util.Random;
 
-import ExceptionFolder.WrongInputEE;
+import ExceptionFolder.wrongInputEE;
 
 public class bgGenerator {
 
@@ -27,7 +27,7 @@ public class bgGenerator {
     public Texture starGen(int seed, int particleAmount, float alphaValue, float  planetSpawnRate , boolean planet, int maxPixelSize, int minPixelSize) throws Exception{
 
         if(particleAmount<0 || alphaValue<0 || planetSpawnRate<0 || maxPixelSize<0 || minPixelSize<0 || minPixelSize>maxPixelSize){
-            throw new WrongInputEE("Value cant be below 0");
+            throw new wrongInputEE("Value cant be below 0");
         }
 
         Random rand = new Random(seed);
@@ -80,7 +80,7 @@ public class bgGenerator {
     public Pixmap starGen(int seed, int particleAmount, float alphaValue, float  planetSpawnRate , boolean planet, int maxPixelSize, int minPixelSize, boolean t) throws Exception{
 
         if(particleAmount<0 || alphaValue<0 || planetSpawnRate<0 || maxPixelSize<0 || minPixelSize<0 || minPixelSize>maxPixelSize){
-            throw new WrongInputEE("Value cant be below 0");
+            throw new wrongInputEE("Value cant be below 0");
         }
 
         Random rand = new Random(seed);

@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import java.util.Random;
 
 import Background.bgGenerator;
-import MainMethod.BulletHellMain;
+import MainMethod.bulletHellMain;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class loadingScreen extends ApplicationAdapter implements Screen{
@@ -42,9 +42,9 @@ public class loadingScreen extends ApplicationAdapter implements Screen{
     boolean firstRender;
     boolean checkAssetsExist;
 
-    BulletHellMain game;
+    bulletHellMain game;
 
-    public loadingScreen(BulletHellMain game,  boolean genEverytime){
+    public loadingScreen(bulletHellMain game, boolean genEverytime){
         this.game = game;
         firstRender = true;
         this.genEverytimeFlag = genEverytime;
