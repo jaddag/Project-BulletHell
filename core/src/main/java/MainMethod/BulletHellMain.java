@@ -23,7 +23,7 @@ public class BulletHellMain extends Game {
     public void create() {
         batch = new SpriteBatch();
         genEverytime = false;
-        ls = new loadingScreen(this,genEverytime);
+        ls = new loadingScreen(this, genEverytime);
         assetManager = new AssetManager(fileName -> Gdx.files.local(fileName));
         this.setScreen(ls);
     }

@@ -17,9 +17,9 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import java.util.Random;
 
-import Background.bgGenerator;
 import HUD.Button;
 import HUD.JoyStick;
+import HUD.drawHUD;
 import MainMethod.BulletHellMain;
 import Player.player;
 
@@ -78,7 +78,11 @@ public class gameScreen implements Screen {
         int time;
         int timeCount;
         Vector2 buttonCords;
-        Button button;
+        Vector2 button2Cords;
+
+    Button button;
+
+        drawHUD drawHUD;
 
     public gameScreen(BulletHellMain game) {
         this.game = game;
@@ -149,14 +153,18 @@ public class gameScreen implements Screen {
 
         public void HUD(){
             buttonCords = new Vector2(screenW -200f, 200f);
+            button2Cords = new Vector2(0f,0f);
             jsCords = new Vector2(screenW*0.1f, screenH*0.2f);
-            js = new JoyStick(150, jsCords);
-            button = new Button(200, buttonCords);
+
+            drawHUD = new drawHUD(true, enableInput, jsCords, buttonCords);
+            drawHUD.setShipSpeed(shipSpeed);
+            drawHUD.setShipSprite(shipSprite);
         }
 
         @Override
         public void resize(int width, int height) {
             viewport.update(width, height, true);
+            drawHUD.getHudViewport().update(width, height, true);
         }
 
         @Override
@@ -178,9 +186,8 @@ public class gameScreen implements Screen {
 
             backgroundDraw();
             updateBGPos();
-            input();
+            Overlay();
             draw();
-
         }
 
 
@@ -195,25 +202,17 @@ public class gameScreen implements Screen {
             backgroundTexture1.dispose();
             if (dropTexture != null) dropTexture.dispose();
             spriteBatch.dispose();
+            drawHUD.getSpriteBatch().dispose();
 
         }
 
-        private void input() {
-
-//            if(shipSprite.getY() >= 400){
-//                enableInput = true;
-//            }
-
-            if(enableInput){
-                if (Gdx.input.isTouched()) {
-                    touchPos.set(Gdx.input.getX(), Gdx.input.getY());
-                    viewport.unproject(touchPos);
-                    js.moveJoyStick(shipSprite, shipSpeed, touchPos);
-                }else{
-                    js.reset();
-                }
+        private void Overlay() {
+            if (Gdx.input.isTouched()) {
+                touchPos.set(Gdx.input.getX(), Gdx.input.getY());
             }
 
+            drawHUD.getHudViewport().apply();
+            drawHUD.draw(touchPos);
         }
 
         private void draw() {
@@ -222,16 +221,13 @@ public class gameScreen implements Screen {
             font.getData().setScale(3f);
             spriteBatch.begin();
 
-            font.draw(spriteBatch, "FPS: " + Gdx.graphics.getFramesPerSecond() + " SR: " + screenW + " x " + screenH, 20, screenH-30);
-            font.draw(spriteBatch, "PosX: " + (shipSprite.getX()+(shipSprite.getWidth()/2)) + " PoxY: " + (shipSprite.getY()+(shipSprite.getHeight()/2)) , 20, screenH-90);
-            font.draw(spriteBatch, "scrollX: " + scrollY + " scrollX1:" + scrollY1, 20, screenH-150);
-            font.draw(spriteBatch, "isPressed?: " + js.getInput() +" firstTouch: " + js.getFirstTouch(), 20, screenH-210);
+//            font.draw(spriteBatch, "FPS: " + Gdx.graphics.getFramesPerSecond() + " SR: " + screenW + " x " + screenH, 20, screenH - 30);
+//            font.draw(spriteBatch, "PosX: " + (shipSprite.getX() + (shipSprite.getWidth() / 2)) + " PoxY: " + (shipSprite.getY() + (shipSprite.getHeight() / 2)), 20, screenH - 90);
+//            font.draw(spriteBatch, "dev Options:" , 20, screenH - 210);
 
             shipSprite.draw(spriteBatch);
 
             spriteBatch.end();
-
-            js.draw();
         }
 
 
@@ -285,6 +281,8 @@ public class gameScreen implements Screen {
         if(scrollSkyTexture >= screenH){
             scrollSkyTexture = 0;
         }
+
+        drawHUD.devConsole("S1: " + scrollY + "S2: " + scrollY1 + "S3: " + scrollY2);
     }
 
     private void flyAnim(float time, float FlyingYPos) {
