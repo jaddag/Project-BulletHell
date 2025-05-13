@@ -23,6 +23,8 @@ public class camera {
     public void update(float panning, float zoom){
 
         camera.position.set((sprite.getX() + (sprite.getWidth()/2)), (sprite.getY() + (sprite.getHeight()/2)), 0);
+        this.zoom = zoom;
+        camera.zoom = this.zoom;
         camera.update();
 
     }

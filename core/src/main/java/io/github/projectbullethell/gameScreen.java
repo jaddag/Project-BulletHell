@@ -29,7 +29,6 @@ public class gameScreen implements Screen {
         Texture backgroundTexture1;
         Texture backgroundTexture2;
         Texture backgroundTexture3;
-        Texture planet1;
         Texture starBackground;
         Texture alphaBackground;
 
@@ -187,7 +186,7 @@ public class gameScreen implements Screen {
 //            }
 
         backgroundDraw();
-        updateBGPos();
+        updateBGPos(0f);
         headUpDisplay();
         updateCamera();
         draw();
@@ -237,7 +236,7 @@ public class gameScreen implements Screen {
     }
 
     private void updateCamera(){
-        camera.update( 1f, 1f);
+        camera.update( 1f, 2f);
     }
 
     private void backgroundDraw() {
@@ -269,7 +268,7 @@ public class gameScreen implements Screen {
         spriteBatch.end();
     }
 
-    private void updateBGPos() {
+    private void updateBGPos(float speedModifier) {
         deltaTime = Gdx.graphics.getDeltaTime();
         scrollY += speed * deltaTime;
         if(scrollY >= screenH){
