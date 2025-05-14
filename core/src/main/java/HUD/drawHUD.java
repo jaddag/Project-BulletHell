@@ -3,11 +3,12 @@ package HUD;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
+import Player.player;
 
 public class drawHUD {
     private float screenW;
@@ -20,7 +21,7 @@ public class drawHUD {
 
     private Vector2 touchPos;
     private String dev;
-    private Sprite shipSprite;
+    private player player;
     private boolean enableInput;
     private joyStick js;
     private HUD.button button;
@@ -28,7 +29,7 @@ public class drawHUD {
     private float size;
     private boolean enableDevStats;
 
-    public drawHUD(boolean enableDevStats, boolean enableInput, Vector2 joyStickCords, Vector2 buttonCords){
+    public drawHUD(boolean enableDevStats, boolean enableInput, Vector2 joyStickCords, Vector2 buttonCords, player player){
         screenH = Gdx.graphics.getHeight();
         screenW = Gdx.graphics.getWidth();
 
@@ -37,7 +38,9 @@ public class drawHUD {
 
         size = 2f;
 
-        js = new joyStick(150, joyStickCords);
+        this.player = player;
+
+        js = new joyStick(150, joyStickCords, player);
         button = new button(200, buttonCords);
 
         this.enableInput = enableInput;
@@ -67,7 +70,7 @@ public class drawHUD {
         if (Gdx.input.isTouched()) {
             touchPos.set(Gdx.input.getX(), Gdx.input.getY());
             hudViewport.unproject(touchPos);
-            js.moveJoyStick(shipSprite, shipSpeed, touchPos);
+            js.moveJoyStick(shipSpeed, touchPos);
         }else{
             js.reset();
         }
@@ -82,7 +85,7 @@ public class drawHUD {
         hudBatch.begin();
 
         font.draw(hudBatch, "FPS: " + Gdx.graphics.getFramesPerSecond() + " SR: " + screenW + " x " + screenH, 20, screenH - 10*size);
-        font.draw(hudBatch, "PosX: " + (shipSprite.getX() + (shipSprite.getWidth() / 2)) + " PoxY: " + (shipSprite.getY() + (shipSprite.getHeight() / 2)), 20, screenH - 30*size);
+        font.draw(hudBatch, "PosX: " + (player.getSprite().getX() + (player.getSprite().getWidth() / 2)) + " PoxY: " + (player.getSprite().getY() + (player.getSprite().getHeight() / 2)), 20, screenH - 30*size);
         font.draw(hudBatch, "dev Options: " + dev, 20, screenH - 50*size);
 
         hudBatch.end();
@@ -92,8 +95,8 @@ public class drawHUD {
         this.dev = dev;
     }
 
-    public void setShipSprite(Sprite ShipSprite){
-        this.shipSprite = ShipSprite;
+    public void setPlayer(player player){
+        this.player = player;
     }
 
     public void setShipSpeed(float speed){

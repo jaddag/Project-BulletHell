@@ -2,30 +2,33 @@ package HUD;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import com.badlogic.gdx.graphics.Color;
+import Player.player;
 
 public class joyStick {
-
+    player player;
     Rectangle touchArea;
+    Vector2 shipCords;
     ShapeRenderer shapeRendererJoystick;
     Vector2 bigCircleCords;
     Vector2 smallCircleCords;
     Vector2 resetCords;
     int radiusBigCircle;
     int radiusSmallCircle;
+    Vector2 direction;
 
     boolean inputJoyStick;
     boolean touchingJoyStick;
     boolean firstTouch;
 
 
-    public joyStick(int buttonSize, Vector2 cords){
+    public joyStick(int buttonSize, Vector2 cords, player player){
+        this.player = player;
 
         shapeRendererJoystick = new ShapeRenderer();
         resetCords = new Vector2(cords);
@@ -41,7 +44,7 @@ public class joyStick {
 
     }
 
-    public void moveJoyStick (Sprite sprite, float speed, Vector2 touchPos) {
+    public void moveJoyStick (float speed, Vector2 touchPos) {
         if (!Gdx.input.isTouched() || !touchArea.contains(touchPos)) {
             inputJoyStick = false;
             return;
@@ -85,24 +88,25 @@ public class joyStick {
         }
 
 
-                    //Führt Animation aus je nach Direction
-//            direction = new Vector2(smallCircleCords).sub(bigCircleCords);
-//            if (Math.abs(direction.x) > Math.abs(direction.y)) {
-//                if (direction.x > 0) {
-//
-//                } else {
-//
-//                }
+            //Führt Animation aus je nach Direction
+            //shiff cords
+            direction = new Vector2(smallCircleCords).sub(bigCircleCords);
+            if (Math.abs(direction.x) > Math.abs(direction.y)) {
+                if (direction.x > 0) {
+                    player.lookRight();
+                } else {
+                    player.lookLeft();
+                }
 //            } else {
 //                if (direction.y > 0) {
 //
 //                } else {
 //
 //                }
-//            }
+            }
 
-        sprite.translateX((smallCircleCords.x - bigCircleCords.x)/radiusBigCircle*speed);
-        sprite.translateY((smallCircleCords.y-bigCircleCords.y)/radiusBigCircle*speed);
+        player.getSprite().translateX((smallCircleCords.x - bigCircleCords.x)/radiusBigCircle*speed);
+        player.getSprite().translateY((smallCircleCords.y-bigCircleCords.y)/radiusBigCircle*speed);
 
     }
 

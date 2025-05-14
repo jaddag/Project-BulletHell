@@ -1,45 +1,62 @@
 package Player;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Disposable;
 
-import Background.spaceBGGen;
+import genTexture.generateTexture;
+import Glow.glow;
 
 public class player implements Disposable {
 
-    Texture shipTexture;
+    glow glow;
+    float screenW;
+    float screenH;
+    Texture shipTextureL;
+    TextureRegion shipTextureR;
     Sprite shipSprite;
     float sizeX;
     float sizeY;
-    spaceBGGen bg;
+    generateTexture genT;
     playerArrayList pal;
     Rectangle bounds;
 
-    public player(){
+    public player(Color glowColour){
+        screenW = Gdx.graphics.getWidth();
+        screenH = Gdx.graphics.getHeight();
+
+        glow = new glow(glowColour);
+
         sizeX = (float)Gdx.graphics.getWidth()/10;
         sizeY = (float)Gdx.graphics.getHeight()/10;
 
-        bg = new spaceBGGen();
+        genT = new generateTexture();
         pal = new playerArrayList();
         pal.load();
-//        shipTexture = bg.genTexture(30, pal.getArrayList());
-        shipTexture = new Texture("Player/ship.png");
+        System.out.println("check here");
+        shipTextureL = genT.genTexture(30, 10, pal.getArrayList());
+        shipTextureR = new TextureRegion(shipTextureL);
+        shipTextureR.flip(true, false);
+//        shipTexture = new Texture("Player/ship.png");
 
-        shipSprite = new Sprite(shipTexture);
+        shipSprite = new Sprite(shipTextureR);
 
         shipSprite.setSize(sizeX, sizeX);
         shipSprite.setOriginCenter();
 
         bounds = new Rectangle(shipSprite.getX(), shipSprite.getY(), shipSprite.getWidth(), shipSprite.getHeight());
+
+        shipSprite.setCenter((screenW/2), screenH/2);
     }
 
-    public void update(float delta) {
-        bounds.setPosition(shipSprite.getX(), shipSprite.getY());
-    }
+//    public void update(float delta) {
+//        bounds.setPosition(shipSprite.getX(), shipSprite.getY());
+//    }
 
 
     public void render(SpriteBatch batch) {
@@ -50,29 +67,31 @@ public class player implements Disposable {
         return null;
     }
 
-
-
-    public Texture getShipTexture(){
-        return shipTexture;
-    }
-
-    public void setNewTexture(String path) {
-        if (shipTexture != null) {
-            shipTexture.dispose();
-        }
-        this.shipTexture = new Texture(path);
-        shipSprite.setTexture(shipTexture);
-    }
-
     public Sprite getSprite(){
         return shipSprite;
     }
 
     @Override
     public void dispose() {
-        if (shipTexture != null) {
-            shipTexture.dispose();
+        if (shipTextureL != null) {
+            shipTextureL.dispose();
         }
+        shipTextureR = null;
+    }
+
+    public void lookRight(){
+        shipSprite.setRegion(shipTextureR);
+    }
+
+    public void lookLeft(){
+        shipSprite.setRegion(shipTextureL);
+    }
+
+    public void shoot(Sprite target){
+
+        target.getY();
+        target.getX();
+
     }
 
     public float getSizeX(){

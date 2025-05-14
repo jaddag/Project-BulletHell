@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -22,6 +23,7 @@ import HUD.drawHUD;
 import MainMethod.bulletHellMain;
 import Player.player;
 import camera.camera;
+import camera.bgAdjustment;
 
 public class gameScreen implements Screen {
         private final bulletHellMain game;
@@ -30,6 +32,7 @@ public class gameScreen implements Screen {
         Texture backgroundTexture2;
         Texture backgroundTexture3;
         Texture starBackground;
+        TextureRegion flippedStarBackground;
         Texture alphaBackground;
 
         float shipSpeed;
@@ -81,6 +84,8 @@ public class gameScreen implements Screen {
         Vector2 button2Cords;
 
         drawHUD drawHUD;
+        bgAdjustment bgAdjust;
+        player player1;
 
     public gameScreen(bulletHellMain game) {
         this.game = game;
@@ -115,9 +120,8 @@ public class gameScreen implements Screen {
 
         spriteBatch = new SpriteBatch();
 
-        player player = new player();
-        shipSprite = player.getSprite();
-        shipSprite.setCenter((screenW/2), screenH/2);
+        player1 = new player(new Color(57/255f, 255/255f, 20/255f, 1f));
+        shipSprite = player1.getSprite();
 
         camera = new camera(shipSprite);
 
@@ -133,6 +137,11 @@ public class gameScreen implements Screen {
 
         //HUD
         HUD();
+
+        bgAdjust = new bgAdjustment(camera, 10f);
+
+        flippedStarBackground = new TextureRegion(starBackground);
+        flippedStarBackground.flip(true, false);
     }
 
     public void getBG(){
@@ -157,9 +166,8 @@ public class gameScreen implements Screen {
         button2Cords = new Vector2(0f,0f);
         jsCords = new Vector2(screenW*0.1f, screenH*0.2f);
 
-        drawHUD = new drawHUD(true, enableInput, jsCords, buttonCords);
+        drawHUD = new drawHUD(true, enableInput, jsCords, buttonCords, player1);
         drawHUD.setShipSpeed(shipSpeed);
-        drawHUD.setShipSprite(shipSprite);
     }
 
     @Override
@@ -188,6 +196,7 @@ public class gameScreen implements Screen {
         backgroundDraw();
         updateBGPos(0f);
         headUpDisplay();
+        shipSprite = player1.getSprite();
         updateCamera();
         draw();
     }
@@ -215,8 +224,7 @@ public class gameScreen implements Screen {
 
         drawHUD.getHudViewport().apply();
         drawHUD.draw(touchPos);
-
-        drawHUD.devConsole("X: " + camera.getCameraPos().x + "Y: " + camera.getCameraPos().y);
+        drawHUD.devConsole("X: " + camera.getCameraPos().x + " Y: " + camera.getCameraPos().y + " Right Camera Border : " + bgAdjust.getCords() + " testL: " + bgAdjust.testL() + " testR: " + bgAdjust.testR());
 
     }
 
@@ -236,18 +244,24 @@ public class gameScreen implements Screen {
     }
 
     private void updateCamera(){
-        camera.update( 1f, 2f);
+        camera.update( 1f, 1f);
     }
 
     private void backgroundDraw() {
+        bgAdjust.updateCam();
+
         ScreenUtils.clear(Color.BLACK);
         viewport.apply();
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
 
         spriteBatch.begin();
 
-        spriteBatch.draw(starBackground, 0, -scrollSkyTexture, screenW, screenH);
-        spriteBatch.draw(starBackground, 0, screenH-scrollSkyTexture, screenW, screenH);
+//        spriteBatch.draw(starBackground, bgAdjust.getInfiniteBGCordsR(), 0, screenW, screenH);
+//        spriteBatch.draw(flippedStarBackground, bgAdjust.getInfiniteBGCordsL(), 0, screenW, screenH);
+
+        spriteBatch.draw(starBackground, 0, - scrollSkyTexture, screenW, screenH);
+        spriteBatch.draw(starBackground, 0, screenH - scrollSkyTexture, screenW, screenH);
+
 
         spriteBatch.draw(alphaBackground,camera.getCameraPos().x-((float) screenW /2),camera.getCameraPos().y-((float) screenH /2), screenW, screenH);
 

@@ -111,30 +111,7 @@ public class spaceBGGen {
 
         return backgroundTexture;
     }
-
-    public Texture genTexture(int gridSize, ArrayList<Color> arrayList){
-        arrCount = -1;
-
-        Pixmap pixmap = new Pixmap(gridSize * pixelSize, gridSize * pixelSize, Pixmap.Format.RGBA8888);
-        pixmap.setColor(0,0,0,0);
-        pixmap.fill();
-
-        for (int column = 0; column < gridSize; column++ ){
-            for (int row = 0; row < gridSize; row++){
-                arrCount++;
-
-                pixmap.setColor(arrayList.get(arrCount));
-                pixmap.fillRectangle(pixelSize*row, pixelSize*column, pixelSize, pixelSize);
-            }
-        }
-
-        Texture backgroundTexture = new Texture(pixmap);
-        pixmap.dispose();
-
-        return backgroundTexture;
-    }
 }
-
 
 
 
