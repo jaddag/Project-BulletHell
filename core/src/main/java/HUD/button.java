@@ -11,6 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 public class button {
 
+
+
+
     Stage stage;
     Skin skin;
     TextButton myButton;
@@ -19,22 +22,35 @@ public class button {
 
     ShapeRenderer shapeRendererButton;
 
+    boolean isPressed = false;
+
     public button(int buttonSize, Vector2 buttonPos) {
-
-        shapeRendererButton = new ShapeRenderer();
-
-
-        this.buttonPos = new Vector2(buttonPos);
         this.buttonSize = buttonSize;
-
-
-
-    }
-
-    public void useButton(){
-
+        this.buttonPos = buttonPos;
+        this.shapeRendererButton = new ShapeRenderer();
 
     }
+
+    public boolean update(){
+        Vector2 touch = new Vector2(Gdx.input.getX(),Gdx.graphics.getHeight() - Gdx.input.getY());
+        boolean isTouching = Gdx.input.isTouched();
+
+       if (isTouching) {
+            if (!isPressed && touch.dst(buttonPos)
+            <= buttonSize / 2f) {
+                isPressed = true;
+            }
+        }else{
+            isPressed = false;
+        }
+
+       return isPressed;
+    }
+
+
+    public boolean isPressed(){
+        return isPressed;
+   }
 
     public void draw() {
         //hallo
@@ -51,5 +67,4 @@ public class button {
         shapeRendererButton.end();
     }
 
-
-}
+ }

@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import java.util.Random;
 
+import HUD.button;
 import HUD.joyStick;
 import HUD.drawHUD;
 import MainMethod.bulletHellMain;
@@ -84,6 +85,8 @@ public class gameScreen implements Screen {
         Vector2 buttonCords;
         Vector2 button2Cords;
 
+
+
         drawHUD drawHUD;
         bgAdjustment bgAdjust;
         player player1;
@@ -144,6 +147,7 @@ public class gameScreen implements Screen {
 
         flippedStarBackground = new TextureRegion(starBackground);
         flippedStarBackground.flip(true, false);
+
     }
 
     public void getBG(){
@@ -230,7 +234,7 @@ public class gameScreen implements Screen {
 
         drawHUD.getHudViewport().apply();
         drawHUD.draw(touchPos);
-        drawHUD.devConsole("X: " + camera.getCameraPos().x + " Y: " + camera.getCameraPos().y + " Right Camera Border : " + bgAdjust.getCords() + " testL: " + bgAdjust.testL() + " testR: " + bgAdjust.testR());
+        drawHUD.devConsole("X: " + camera.getCameraPos().x + " Y: " + camera.getCameraPos().y + " Right Camera Border : " + bgAdjust.getCords() + " testL: " + bgAdjust.testL() + " testR: " + bgAdjust.testR() ) ;
 
     }
 

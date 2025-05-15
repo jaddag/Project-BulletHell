@@ -89,7 +89,7 @@ public class joyStick {
 
 
             //Führt Animation aus je nach Direction
-            //shiff cords
+            //schiff cords
             direction = new Vector2(smallCircleCords).sub(bigCircleCords);
             if (Math.abs(direction.x) > Math.abs(direction.y)) {
                 if (direction.x > 0) {

@@ -59,6 +59,7 @@ public class drawHUD {
 
         devText();
         updateJoyStick();
+        updateButton();
         js.draw();
         button.draw();
 
@@ -77,8 +78,8 @@ public class drawHUD {
     }
 
     private void updateButton(){
-        //later implementation of button function
-    }
+        button.update();
+   }
 
     private void devText(){
         if(!enableDevStats) return;
@@ -86,7 +87,8 @@ public class drawHUD {
 
         font.draw(hudBatch, "FPS: " + Gdx.graphics.getFramesPerSecond() + " SR: " + screenW + " x " + screenH, 20, screenH - 10*size);
         font.draw(hudBatch, "PosX: " + (player.getSprite().getX() + (player.getSprite().getWidth() / 2)) + " PoxY: " + (player.getSprite().getY() + (player.getSprite().getHeight() / 2)), 20, screenH - 30*size);
-        font.draw(hudBatch, "dev Options: " + dev, 20, screenH - 50*size);
+        font.draw(hudBatch, "checkedButton: " + button.isPressed,20, screenH - 50*size);
+        font.draw(hudBatch, "dev Options: " + dev, 20, screenH - 70*size);
 
         hudBatch.end();
     }
