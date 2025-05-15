@@ -30,15 +30,12 @@ public class player implements Disposable {
         screenW = Gdx.graphics.getWidth();
         screenH = Gdx.graphics.getHeight();
 
-        glow = new glow(glowColour);
-
         sizeX = (float)Gdx.graphics.getWidth()/10;
         sizeY = (float)Gdx.graphics.getHeight()/10;
 
         genT = new generateTexture();
         pal = new playerArrayList();
         pal.load();
-        System.out.println("check here");
         shipTextureL = genT.genTexture(30, 10, pal.getArrayList());
         shipTextureR = new TextureRegion(shipTextureL);
         shipTextureR.flip(true, false);
@@ -52,17 +49,21 @@ public class player implements Disposable {
         bounds = new Rectangle(shipSprite.getX(), shipSprite.getY(), shipSprite.getWidth(), shipSprite.getHeight());
 
         shipSprite.setCenter((screenW/2), screenH/2);
+
+        glow = new glow(glowColour, sizeX, shipSprite);
     }
 
 //    public void update(float delta) {
 //        bounds.setPosition(shipSprite.getX(), shipSprite.getY());
 //    }
 
-
-    public void render(SpriteBatch batch) {
-        shipSprite.draw(batch);
+    public void updateGlow(){
+        glow.updatePos();
     }
 
+    public Sprite getGlow(){
+        return glow.getSprite();
+    }
     public static Rectangle getBounds() {
         return null;
     }
@@ -101,4 +102,5 @@ public class player implements Disposable {
     public float getSizeY(){
         return sizeY;
     }
+
 }

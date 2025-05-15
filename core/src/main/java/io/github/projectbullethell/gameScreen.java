@@ -70,6 +70,7 @@ public class gameScreen implements Screen {
         Sound dropSound;
 
         Sprite shipSprite;
+        Sprite shipGlow;
         Random rand = new Random();
 
         int gridSize;
@@ -120,8 +121,9 @@ public class gameScreen implements Screen {
 
         spriteBatch = new SpriteBatch();
 
-        player1 = new player(new Color(57/255f, 255/255f, 20/255f, 1f));
+        player1 = new player(new Color(157/255f, 0/255f, 255/255f, 1f));
         shipSprite = player1.getSprite();
+        shipGlow = player1.getGlow();
 
         camera = new camera(shipSprite);
 
@@ -196,11 +198,10 @@ public class gameScreen implements Screen {
         backgroundDraw();
         updateBGPos(0f);
         headUpDisplay();
-        shipSprite = player1.getSprite();
+        spriteUpdate();
         updateCamera();
         draw();
     }
-
 
     @Override
     public void pause() {}
@@ -215,6 +216,11 @@ public class gameScreen implements Screen {
         spriteBatch.dispose();
         drawHUD.getSpriteBatch().dispose();
 
+    }
+
+    private void spriteUpdate(){
+        shipSprite = player1.getSprite();
+        player1.updateGlow();
     }
 
     private void headUpDisplay() {
@@ -238,13 +244,14 @@ public class gameScreen implements Screen {
 //            font.draw(spriteBatch, "PosX: " + (shipSprite.getX() + (shipSprite.getWidth() / 2)) + " PoxY: " + (shipSprite.getY() + (shipSprite.getHeight() / 2)), 20, screenH - 90);
 //            font.draw(spriteBatch, "dev Options:" , 20, screenH - 210);
 
+        shipGlow.draw(spriteBatch);
         shipSprite.draw(spriteBatch);
 
         spriteBatch.end();
     }
 
     private void updateCamera(){
-        camera.update( 1f, 1f);
+        camera.update( 1f, 2f);
     }
 
     private void backgroundDraw() {
@@ -261,19 +268,39 @@ public class gameScreen implements Screen {
 
         spriteBatch.draw(starBackground, 0, - scrollSkyTexture, screenW, screenH);
         spriteBatch.draw(starBackground, 0, screenH - scrollSkyTexture, screenW, screenH);
+        spriteBatch.draw(starBackground, 0, (screenH*2) - scrollSkyTexture, screenW, screenH);
 
+        spriteBatch.draw(flippedStarBackground, screenW, - scrollSkyTexture, screenW, screenH);
+        spriteBatch.draw(flippedStarBackground, screenW, screenH - scrollSkyTexture, screenW, screenH);
+        spriteBatch.draw(flippedStarBackground, screenW, (screenH*2) - scrollSkyTexture, screenW, screenH);
 
         spriteBatch.draw(alphaBackground,camera.getCameraPos().x-((float) screenW /2),camera.getCameraPos().y-((float) screenH /2), screenW, screenH);
 
         spriteBatch.draw(backgroundTexture1, 0, -scrollY, screenW, screenH);
         spriteBatch.draw(backgroundTexture1, 0, screenH-scrollY, screenW, screenH);
+        spriteBatch.draw(backgroundTexture1, 0, (screenH*2)-scrollY, screenW, screenH);
+
+        spriteBatch.draw(backgroundTexture1, screenW, -scrollY, screenW, screenH);
+        spriteBatch.draw(backgroundTexture1, screenW, screenH-scrollY, screenW, screenH);
+        spriteBatch.draw(backgroundTexture1, screenW, (screenH*2)-scrollY, screenW, screenH);
 
 
         spriteBatch.draw(backgroundTexture2, 0, -scrollY1, screenW, screenH);
         spriteBatch.draw(backgroundTexture2, 0, screenH-scrollY1, screenW, screenH);
+        spriteBatch.draw(backgroundTexture2, 0, (screenH*2)-scrollY1, screenW, screenH);
+
+        spriteBatch.draw(backgroundTexture2, screenW, -scrollY1, screenW, screenH);
+        spriteBatch.draw(backgroundTexture2, screenW, screenH-scrollY1, screenW, screenH);
+        spriteBatch.draw(backgroundTexture2, screenW, (screenH*2)-scrollY1, screenW, screenH);
+
 
         spriteBatch.draw(backgroundTexture3, 0, -scrollY2, screenW, screenH);
         spriteBatch.draw(backgroundTexture3, 0, screenH-scrollY2, screenW, screenH);
+        spriteBatch.draw(backgroundTexture3, 0, (screenH*2)-scrollY2, screenW, screenH);
+
+        spriteBatch.draw(backgroundTexture3, screenW, -scrollY2, screenW, screenH);
+        spriteBatch.draw(backgroundTexture3, screenW, screenH-scrollY2, screenW, screenH);
+        spriteBatch.draw(backgroundTexture3, screenW, (screenH*2)-scrollY2, screenW, screenH);
 
 //        spriteBatch.draw(planet4, 300-gridSize, -100);
 //        spriteBatch.draw(planet2, 400-gridSize, -200);

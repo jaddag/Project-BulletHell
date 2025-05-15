@@ -15,10 +15,24 @@ public class camera {
     private Sprite sprite;
     private float panning;
     private float zoom;
+    float worldBorderRight;
+    float worldBorderLeft;
+    float worldBorderTop;
+    float worldBorderBottom;
+
+    boolean testTouchingRight;
+    boolean testTouchingLeft;
+    boolean testTouchingTop;
+    boolean testTouchingBottom;
 
     public camera(Sprite sprite){
         screenW = Gdx.graphics.getWidth();
         screenH = Gdx.graphics.getHeight();
+
+        worldBorderRight = screenW * 2;
+        worldBorderLeft = 0;
+        worldBorderBottom = 0;
+        worldBorderTop = screenH * 2;
 
         camPos = new Vector3(screenW/2, screenH/2 , 0f);
         camPos2 = new Vector2(screenW/2, screenH/2);
@@ -31,12 +45,39 @@ public class camera {
 
     public void update(float panning, float zoom){
 
-//        camera.position.set((sprite.getX() + (sprite.getWidth()/2)), (sprite.getY() + (sprite.getHeight()/2)), 0);
-        camera.position.set(camPos);
+        if(getCameraBorderTop() == worldBorderTop){
+            camera.position.set((sprite.getX() + (sprite.getWidth()/2)), (sprite.getY() + (sprite.getHeight()/2)), 0);
+            setTrue();
+            testTouchingTop = false;
+        } else if (getCameraBorderBottom() == worldBorderBottom){
+            camera.position.set((sprite.getX() + (sprite.getWidth()/2)), (sprite.getY() + (sprite.getHeight()/2)), 0);
+            setTrue();
+            testTouchingBottom = false;
+        } else if (getCameraBorderRight() == worldBorderRight){
+            camera.position.set((sprite.getX() + (sprite.getWidth()/2)), (sprite.getY() + (sprite.getHeight()/2)), 0);
+            setTrue();
+            testTouchingRight = false;
+        } else if (getCameraBorderLeft() == worldBorderLeft){
+            camera.position.set((sprite.getX() + (sprite.getWidth()/2)), (sprite.getY() + (sprite.getHeight()/2)), 0);
+            setTrue();
+            testTouchingLeft = false;
+        } else{
+            camera.position.set((sprite.getX() + (sprite.getWidth()/2)), (sprite.getY() + (sprite.getHeight()/2)), 0);
+            setTrue();
+        }
+
+//        camera.position.set(camPos);
         this.zoom = zoom;
         camera.zoom = this.zoom;
         camera.update();
 
+    }
+
+    public void setTrue(){
+        testTouchingRight = true;
+        testTouchingLeft = true;
+        testTouchingTop = true;
+        testTouchingBottom = true;
     }
 
     public OrthographicCamera getCamera() {
@@ -50,5 +91,37 @@ public class camera {
 
     public void overrideSprite(Sprite sprite){
         this.sprite = sprite;
+    }
+
+    public float getCameraBorderTop(){
+      return getCameraPos().y + ((screenW/2)*zoom);
+    }
+
+    public float getCameraBorderBottom(){
+        return getCameraPos().y - ((screenW/2)*zoom);
+    }
+
+    public float getCameraBorderLeft(){
+        return getCameraPos().x - ((screenW/2)*zoom);
+    }
+
+    public float getCameraBorderRight(){
+        return getCameraPos().x + ((screenW/2)*zoom);
+    }
+
+    public boolean getTop(){
+        return testTouchingTop;
+    }
+
+    public boolean getBottom(){
+        return testTouchingBottom;
+    }
+
+    public boolean getLeft(){
+        return testTouchingLeft;
+    }
+
+    public boolean getRight(){
+        return testTouchingRight;
     }
 }

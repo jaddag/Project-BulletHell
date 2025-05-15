@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class glowArrayList {
     ArrayList<Color> pixels;
 
-    glowArrayList(int r, int g, int b){
+    glowArrayList(float r, float g, float b){
         pixels = new ArrayList<>();
         pixels.add(new Color(r, g, b, 1/255f));
         pixels.add(new Color(r, g, b, 2/255f));
