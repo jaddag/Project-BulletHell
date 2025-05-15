@@ -1,4 +1,4 @@
-package camera;
+package Camera;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
@@ -35,7 +35,7 @@ public class bgAdjustment{
         instanceL = 1f;
 
         this.camera = camera;
-        camCords = this.camera.getCameraPos();
+        camCords = this.camera.getSpritePosition();
         bcR = false;
         bcL =true;
         leftBorderR = false;
@@ -45,7 +45,7 @@ public class bgAdjustment{
     }
 
     public void updateCam(){
-        camCords = this.camera.getCameraPos();
+        camCords = this.camera.getSpritePosition();
     }
 
     public float getInfiniteBGCordsR() {

@@ -1,4 +1,4 @@
-package camera;
+package Camera;
 
 public class paralaxxFollow {
 

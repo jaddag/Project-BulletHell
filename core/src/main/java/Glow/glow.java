@@ -4,9 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
-import genTexture.generateTexture;
-import jdk.internal.org.jline.terminal.Size;
-import sun.security.provider.ConfigFile;
+import GenTexture.generateTexture;
 
 public class glow {
     generateTexture generateTexture;

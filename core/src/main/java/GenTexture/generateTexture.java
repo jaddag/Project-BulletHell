@@ -1,4 +1,4 @@
-package genTexture;
+package GenTexture;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
