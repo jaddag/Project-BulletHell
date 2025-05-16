@@ -23,6 +23,7 @@ import HUD.drawHUD;
 import MainMethod.bulletHellMain;
 import Player.player;
 import Enemy.enemy;
+import Enemy.damage.loadAttacks;
 import CameraClass.camera;
 import CameraClass.bgAdjustment;
 
@@ -93,6 +94,9 @@ public class gameScreen implements Screen {
         bgAdjustment bgAdjust;
         player player1;
         enemy enemy1;
+        int sps = 0;
+
+        loadAttacks loadAttacks;
 
     public gameScreen(bulletHellMain game) {
         this.game = game;
@@ -127,7 +131,7 @@ public class gameScreen implements Screen {
 
         spriteBatch = new SpriteBatch();
 
-        player1 = new player(new Color(157/255f, 0/255f, 255/255f, 1f));
+        player1 = new player(new Color(0f, 180/255f, 255/255f, 1f));
         shipSprite = player1.getSprite();
         shipGlow = player1.getGlow();
 
@@ -172,6 +176,8 @@ public class gameScreen implements Screen {
         backgroundTexture3 = assetManager.get("cache/background3.png", Texture.class);
         starBackground = assetManager.get("cache/starBackground.png", Texture.class);
         alphaBackground = assetManager.get("cache/alphaBG.png", Texture.class);
+
+        loadAttacks = new loadAttacks(game);
     }
 
     public void HUD(){
