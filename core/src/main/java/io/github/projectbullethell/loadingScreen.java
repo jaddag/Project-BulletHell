@@ -16,6 +16,7 @@ import java.util.Random;
 
 import Background.bgGenerator;
 import MainMethod.bulletHellMain;
+import Glow.*;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class loadingScreen extends ApplicationAdapter implements Screen{
@@ -33,7 +34,12 @@ public class loadingScreen extends ApplicationAdapter implements Screen{
     Pixmap star;
     Pixmap alphaBG;
 
+    Pixmap attackGrid;
+    Pixmap attackGridREACT;
+    Pixmap attackRing;
+    Pixmap glowShot;
     bgGenerator bg;
+    generateGlowTextures gat;
 
     Random rand;
 
@@ -43,6 +49,7 @@ public class loadingScreen extends ApplicationAdapter implements Screen{
     boolean checkAssetsExist;
 
     bulletHellMain game;
+    int size;
 
     public loadingScreen(bulletHellMain game, boolean genEverytime){
         this.game = game;
@@ -90,8 +97,10 @@ public class loadingScreen extends ApplicationAdapter implements Screen{
 
     public void loadAssets(){
         if(genEverytimeFlag){
+            size = 10;
             rand = new Random();
             bg = new bgGenerator();
+            gat = new generateGlowTextures();
             try {
                 pixmap3 = bg.starGen(rand.nextInt(), 22, 0.2f, 33, false, 5, 3, false);
                 PixmapIO.writePNG(Gdx.files.local("cache/background3.png"), pixmap3);
@@ -115,11 +124,26 @@ public class loadingScreen extends ApplicationAdapter implements Screen{
             alphaBG = bg.coloredBackground(screenW, screenH, new Color(0f,0f,0f,0.5f));
             PixmapIO.writePNG(Gdx.files.local("cache/alphaBG.png"), alphaBG);
             alphaBG.dispose();
+
+            attackGrid = gat.glowGridAttack(Color.RED, size);
+            PixmapIO.writePNG(Gdx.files.local("cache/attackGrid.png"), attackGrid);
+            attackGrid.dispose();
+
+            attackGridREACT = gat.glowGridAttackREACT(Color.RED, size);
+            PixmapIO.writePNG(Gdx.files.local("cache/attackGridREACT.png"), attackGridREACT);
+            attackGridREACT.dispose();
+
+            attackRing = gat.glowRingAttack(Color.RED, size);
+            PixmapIO.writePNG(Gdx.files.local("cache/attackRing.png"), attackRing);
+            attackRing.dispose();
+
+//            glowShot = gat.glow(Color.RED, 64, 0.1f);
+//            PixmapIO.writePNG(Gdx.files.local("cache/glowShot.png"), glowShot);
+//            glowShot.dispose();
         }
     }
 
     private void loadScreenIcon(){
-
         float Percent = (Gdx.graphics.getWidth() * 0.10f);
         float xWidth = (Gdx.graphics.getWidth() - Percent) / 2f;
         float yWidth = (Gdx.graphics.getHeight() - Percent) / 2f;
@@ -171,5 +195,9 @@ public class loadingScreen extends ApplicationAdapter implements Screen{
         Gdx.files.local("cache/background3.png").delete();
         Gdx.files.local("cache/starBackground.png").delete();
         Gdx.files.local("cache/alphaBG.png").delete();
+        Gdx.files.local("cache/attackGrid.png").delete();
+        Gdx.files.local("cache/attackGridREACT.png").delete();
+        Gdx.files.local("cache/attackRing.png").delete();
+        Gdx.files.local("cache/glowShot.png").delete();
     }
 }

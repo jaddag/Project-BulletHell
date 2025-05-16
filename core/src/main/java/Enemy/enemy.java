@@ -6,11 +6,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
-import Glow.glow;
+import Glow.generateGlowTextures;
 import GenTexture.generateTexture;
 
 public class enemy {
-    Glow.glow glow;
+    generateGlowTextures glow;
     float screenW;
     float screenH;
     Texture enemyShipTexture;
@@ -25,8 +25,8 @@ public class enemy {
         screenW = Gdx.graphics.getWidth();
         screenH = Gdx.graphics.getHeight();
 
-        sizeX = (float)Gdx.graphics.getWidth()/6;
-        sizeY = (float)Gdx.graphics.getHeight()/6;
+        sizeX = (float)Gdx.graphics.getWidth()/5;
+        sizeY = (float)Gdx.graphics.getHeight()/5;
 
         genT = new generateTexture();
         pal = new enemyArrayList();
@@ -41,7 +41,11 @@ public class enemy {
 
         enemyShipSprite.setCenter((screenW+1000), screenH);
 
-        glow = new glow(glowColour, sizeX, enemyShipSprite);
+        glow = new generateGlowTextures();
+        glow.glow(glowColour, 10, sizeX, enemyShipSprite);
+        glow.updatePos();
+
+
     }
 
     public void updateGlow(){
@@ -59,5 +63,9 @@ public class enemy {
     public Sprite getSprite(){
         return enemyShipSprite;
     }
+
+//    public updateEnemyPosition(Camera camera){
+//
+//    }
 }
 

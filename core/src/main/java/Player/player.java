@@ -9,11 +9,11 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Disposable;
 
 import GenTexture.generateTexture;
-import Glow.glow;
+import Glow.generateGlowTextures;
 
 public class player implements Disposable {
 
-    glow glow;
+    generateGlowTextures glow;
     float screenW;
     float screenH;
     Texture shipTextureL;
@@ -26,6 +26,7 @@ public class player implements Disposable {
     Rectangle bounds;
 
     public player(Color glowColour){
+
         screenW = Gdx.graphics.getWidth();
         screenH = Gdx.graphics.getHeight();
 
@@ -35,9 +36,9 @@ public class player implements Disposable {
         genT = new generateTexture();
         pal = new playerArrayList();
         pal.load();
-        shipTextureL = genT.genTexture(30, 10, pal.getArrayList());
+        shipTextureL = genT.genTexture(27, 10, pal.getArrayList());
         shipTextureR = new TextureRegion(shipTextureL);
-        shipTextureR.flip(true, false);
+//        shipTextureR.flip(true, false);
 //        shipTexture = new Texture("Player/ship.png");
 
         shipSprite = new Sprite(shipTextureR);
@@ -49,7 +50,8 @@ public class player implements Disposable {
 
         shipSprite.setCenter((screenW), screenH);
 
-        glow = new glow(glowColour, sizeX*0.7f, shipSprite);
+        glow = new generateGlowTextures();
+        glow.glow(glowColour, 10, sizeX, shipSprite);
     }
 
 //    public void update(float delta) {

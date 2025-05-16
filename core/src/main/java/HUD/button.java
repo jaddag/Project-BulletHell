@@ -10,10 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 public class button {
-
-
-
-
     Stage stage;
     Skin skin;
     TextButton myButton;
