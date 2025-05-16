@@ -58,19 +58,18 @@ public class drawHUD {
         this.touchPos = touchPos;
 
         devText();
-        updateJoyStickAndButton(); // Multitouch methode
-       // updateButton();
+        updateMultiTouch(); // Multitouch methode
+        //updateButton();
         js.draw();
         button.draw();
         devText();
     }
 
-    private void updateJoyStickAndButton() {
-        if (!enableInput)
-            return;
+    private void updateMultiTouch() {
+        if (!enableInput) return;
 
         boolean joystickHandled = false;
-        boolean buttonHandled = false;
+        boolean buttonPressed = false;
 
         for (int i = 0; i < 2; i++) { // erkennen von max. 2 Fingern
 
@@ -86,19 +85,24 @@ public class drawHUD {
                 }
 
                 // prüft button
-                if (!buttonHandled) {
-                    button.update(fingerPos);
-                    buttonHandled = true;
+                if (fingerPos.dst(button.getButtonPos()) <= button.getButtonSize() / 2f) {
+                    buttonPressed = true;
                 }
             }
         }
+
+        button.setPressed(buttonPressed);
+
         if (!joystickHandled) {
             js.reset();
+
+//        if ( !Gdx.input.isTouched()){
+//            button.update(null);
         }
     }
 
-//    private void updateButton(){
-//        button.update();
+//    private void updateButton(Vector2 touchPos){
+//        button.update(touchPos);
 //   }
 
     private void devText(){

@@ -33,27 +33,45 @@ public class button {
 
     public void update(Vector2 touch){
 
-
-
-            if (touch == null) {
-                isPressed = false;
-                return;
-            }
-            boolean isTouching = Gdx.input.isTouched();
-            if (isTouching){
-                if (!isPressed && touch.dst(buttonPos) <= buttonSize / 2f) {
-                    isPressed = true;
-                }
-        }else{
+        if (!Gdx.input.isTouched() || touch == null) {
             isPressed = false;
+            return;
         }
 
-       return isPressed;
+
+            if (!Gdx.input.isTouched()) {
+                if(touch.dst(buttonPos) <= buttonSize / 2f || isPressed) {
+                    isPressed = true;
+                }else {
+                    isPressed = false;
+                }
+            }
+//            boolean isTouching = Gdx.input.isTouched();
+//            if (isTouching){
+//                if (!isPressed && touch.dst(buttonPos) <= buttonSize / 2f) {
+//
+//                    isPressed = true;
+//                }
+//                 }else{
+//                    isPressed = false;
+//        }
+
+
     }
 
 
     public boolean isPressed(){
         return isPressed;
+   }
+
+   public Vector2 getButtonPos(){
+        return buttonPos;
+   }
+   public int getButtonSize(){
+        return buttonSize;
+   }
+   public void setPressed(boolean value){
+        isPressed = value;
    }
 
     public void draw() {
@@ -69,6 +87,7 @@ public class button {
         shapeRendererButton.circle(buttonPos.x, buttonPos.y, buttonSize);
 
         shapeRendererButton.end();
+
     }
 
  }

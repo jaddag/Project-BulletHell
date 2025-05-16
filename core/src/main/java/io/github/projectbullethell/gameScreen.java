@@ -23,8 +23,8 @@ import HUD.drawHUD;
 import MainMethod.bulletHellMain;
 import Player.player;
 import Enemy.enemy;
-import Camera.camera;
-import Camera.bgAdjustment;
+import CameraClass.camera;
+import CameraClass.bgAdjustment;
 
 public class gameScreen implements Screen {
         private final bulletHellMain game;
