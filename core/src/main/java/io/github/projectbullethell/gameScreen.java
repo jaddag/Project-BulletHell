@@ -208,11 +208,11 @@ public class gameScreen implements Screen {
 
         backgroundDraw();
         updateBGPos(0f);
-        headUpDisplay();
         enemySpriteUpdate();
         playerSpriteUpdate();
         updateCamera();
         draw();
+        headUpDisplay();
     }
 
     @Override

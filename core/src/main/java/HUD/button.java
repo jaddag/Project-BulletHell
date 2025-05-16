@@ -31,8 +31,7 @@ public class button {
 
     }
 
-    public boolean update(){
-        Vector2 touch = new Vector2(Gdx.input.getX(),Gdx.graphics.getHeight() - Gdx.input.getY());
+    public void update(Vector2 touch){
         boolean isTouching = Gdx.input.isTouched();
 
        if (isTouching) {
@@ -43,8 +42,6 @@ public class button {
         }else{
             isPressed = false;
         }
-
-       return isPressed;
     }
 
 

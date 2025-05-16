@@ -49,7 +49,7 @@ public class player implements Disposable {
 
         shipSprite.setCenter((screenW), screenH);
 
-        glow = new glow(glowColour, sizeX, shipSprite);
+        glow = new glow(glowColour, sizeX*0.7f, shipSprite);
     }
 
 //    public void update(float delta) {

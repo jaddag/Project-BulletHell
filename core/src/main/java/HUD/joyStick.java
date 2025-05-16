@@ -25,6 +25,7 @@ public class joyStick {
     boolean inputJoyStick;
     boolean touchingJoyStick;
     boolean firstTouch;
+    private int activePointer;
 
 
     public joyStick(int buttonSize, Vector2 cords, player player){
@@ -41,6 +42,8 @@ public class joyStick {
         radiusBigCircle = buttonSize;
         radiusSmallCircle = (int)(radiusBigCircle * 0.3f);
         touchArea = new Rectangle(0,0, Gdx.graphics.getWidth()/2f, Gdx.graphics.getHeight());
+
+        activePointer = -1;
 
     }
 
@@ -141,7 +144,5 @@ public class joyStick {
         firstTouch = true;
         bigCircleCords.set(resetCords);
         smallCircleCords.set(resetCords);
-
     }
-
 }

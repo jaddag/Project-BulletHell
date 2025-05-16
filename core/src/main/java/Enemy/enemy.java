@@ -25,12 +25,12 @@ public class enemy {
         screenW = Gdx.graphics.getWidth();
         screenH = Gdx.graphics.getHeight();
 
-        sizeX = (float)Gdx.graphics.getWidth()/10;
-        sizeY = (float)Gdx.graphics.getHeight()/10;
+        sizeX = (float)Gdx.graphics.getWidth()/6;
+        sizeY = (float)Gdx.graphics.getHeight()/6;
 
         genT = new generateTexture();
         pal = new enemyArrayList();
-        enemyShipTexture = genT.genTexture(30, 10, pal.getPixels());
+        enemyShipTexture = genT.genTexture(40, 10, pal.getPixels());
 
         enemyShipSprite = new Sprite(enemyShipTexture);
 

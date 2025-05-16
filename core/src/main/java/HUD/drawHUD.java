@@ -57,12 +57,11 @@ public class drawHUD {
     public void draw(Vector2 touchPos){
         this.touchPos = touchPos;
 
-        devText();
         updateJoyStick();
         updateButton();
         js.draw();
         button.draw();
-
+        devText();
     }
 
     private void updateJoyStick(){
@@ -77,9 +76,47 @@ public class drawHUD {
         }
     }
 
+//    private void updateJoyStick() {
+//        if (!enableInput) return;
+//
+//        boolean activeFound = false;
+//
+//        for (int i = 0; i < 5; i++) {
+//            if (Gdx.input.isTouched(i)) {
+//                touchPos.set(Gdx.input.getX(i), Gdx.input.getY(i));
+//                hudViewport.unproject(touchPos);
+//
+//                if (js.getActivePointer() == -1 && js.isTouched(touchPos)) {
+//                    js.startTouch(i, touchPos);
+//                }
+//
+//                if (js.isActivePointer(i)) {
+//                    js.moveJoyStick(shipSpeed, touchPos);
+//                    activeFound = true;
+//                    break;
+//                }
+//            }
+//        }
+//
+//        if (!activeFound && js.getActivePointer() != -1) {
+//            js.stopTouch(js.getActivePointer());
+//        }
+//    }
+
     private void updateButton(){
-        button.update();
-   }
+        button.update(null);
+    }
+
+//    private void updateButton(){
+//        for (int i = 0; i < 5; i++) {
+//            if (Gdx.input.isTouched(i)) {
+//                touchPos.set(Gdx.input.getX(i), Gdx.input.getY(i));
+//                hudViewport.unproject(touchPos);
+//                button.update(touchPos);
+//                break;
+//            }
+//        }
+//    }
 
     private void devText(){
         if(!enableDevStats) return;
