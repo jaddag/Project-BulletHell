@@ -31,20 +31,22 @@ public class button {
 
     }
 
-    public boolean update(){
-        Vector2 touch = new Vector2(Gdx.input.getX(),Gdx.graphics.getHeight() - Gdx.input.getY());
-        boolean isTouching = Gdx.input.isTouched();
+    public void update(Vector2 touch){
 
-       if (isTouching) {
-            if (!isPressed && touch.dst(buttonPos)
-            <= buttonSize / 2f) {
-                isPressed = true;
+
+       
+            if (touch == null) {
+                isPressed = false;
+                return;
             }
+            boolean isTouching = Gdx.input.isTouched();
+            if (isTouching){
+                if (!isPressed && touch.dst(buttonPos) <= buttonSize / 2f) {
+                    isPressed = true;
+                }
         }else{
             isPressed = false;
         }
-
-       return isPressed;
     }
 
 

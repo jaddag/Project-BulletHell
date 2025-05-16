@@ -58,28 +58,48 @@ public class drawHUD {
         this.touchPos = touchPos;
 
         devText();
-        updateJoyStick();
-        updateButton();
+        updateJoyStickAndButton(); // Multitouch methode
+       // updateButton();
         js.draw();
         button.draw();
 
     }
 
-    private void updateJoyStick(){
-        if(!enableInput) return;
+    private void updateJoyStickAndButton() {
+        if (!enableInput)
+            return;
 
-        if (Gdx.input.isTouched()) {
-            touchPos.set(Gdx.input.getX(), Gdx.input.getY());
-            hudViewport.unproject(touchPos);
-            js.moveJoyStick(shipSpeed, touchPos);
-        }else{
+        boolean joystickHandled = false;
+        boolean buttonHandled = false;
+
+        for (int i = 0; i < 2; i++) { // erkennen von max. 2 Fingern
+
+            if (Gdx.input.isTouched(i)) {
+                Vector2 fingerPos = new Vector2(Gdx.input.getX(i), Gdx.input.getY(i));
+                hudViewport.unproject(fingerPos);
+
+// prüft Joystick
+                if (!joystickHandled && js.getTouchArea().contains(fingerPos)) {
+                    js.moveJoyStick(shipSpeed, fingerPos);
+                    joystickHandled = true;
+
+                }
+
+                // prüft button
+                if (!buttonHandled) {
+                    button.update(fingerPos);
+                    buttonHandled = true;
+                }
+            }
+        }
+        if (!joystickHandled) {
             js.reset();
         }
     }
 
-    private void updateButton(){
-        button.update();
-   }
+//    private void updateButton(){
+//        button.update();
+//   }
 
     private void devText(){
         if(!enableDevStats) return;

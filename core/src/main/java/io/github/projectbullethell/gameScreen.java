@@ -272,7 +272,7 @@ public class gameScreen implements Screen {
 
         spriteBatch.draw(starBackground, 0, - scrollSkyTexture, screenW, screenH);
         spriteBatch.draw(starBackground, 0, screenH - scrollSkyTexture, screenW, screenH);
-        spriteBatch.draw(starBackground, 0, (screenH*2) - scrollSkyTexture, screenW, screenH);
+         spriteBatch.draw(starBackground, 0, (screenH*2) - scrollSkyTexture, screenW, screenH);
 
         spriteBatch.draw(flippedStarBackground, screenW, - scrollSkyTexture, screenW, screenH);
         spriteBatch.draw(flippedStarBackground, screenW, screenH - scrollSkyTexture, screenW, screenH);

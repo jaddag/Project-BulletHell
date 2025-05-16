@@ -143,5 +143,8 @@ public class joyStick {
         smallCircleCords.set(resetCords);
 
     }
+    public Rectangle getTouchArea(){
+        return touchArea;
+    }
 
 }
