@@ -104,6 +104,8 @@ public class gameScreen implements Screen {
 
         @Override
     public void show() {
+        loadAttacks = new loadAttacks(game);
+
         anim = true;
         enableInput = true;
 
@@ -176,8 +178,6 @@ public class gameScreen implements Screen {
         backgroundTexture3 = assetManager.get("cache/background3.png", Texture.class);
         starBackground = assetManager.get("cache/starBackground.png", Texture.class);
         alphaBackground = assetManager.get("cache/alphaBG.png", Texture.class);
-
-        loadAttacks = new loadAttacks(game);
     }
 
     public void HUD(){
@@ -244,6 +244,7 @@ public class gameScreen implements Screen {
     private void enemySpriteUpdate(){
         enemySprite = enemy1.getSprite();
         enemy1.updateGlow();
+        enemy1.rings();
     }
 
     private void headUpDisplay() {
@@ -261,6 +262,13 @@ public class gameScreen implements Screen {
         viewport.apply();
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
         font.getData().setScale(3f);
+
+        Texture test = loadAttacks.getAttackGridREACT();
+        Sprite testSprite = new Sprite(test);
+        testSprite.setOriginCenter();
+        testSprite.setX(screenW);
+        testSprite.setY(screenH);
+
         spriteBatch.begin();
 
 //            font.draw(spriteBatch, "FPS: " + Gdx.graphics.getFramesPerSecond() + " SR: " + screenW + " x " + screenH, 20, screenH - 30);
@@ -269,6 +277,8 @@ public class gameScreen implements Screen {
 
         shipGlow.draw(spriteBatch);
         shipSprite.draw(spriteBatch);
+
+        testSprite.draw(spriteBatch);
 
         enemyGlow.draw(spriteBatch);
         enemySprite.draw(spriteBatch);

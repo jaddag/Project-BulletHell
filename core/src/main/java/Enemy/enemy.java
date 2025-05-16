@@ -9,6 +9,8 @@ import com.badlogic.gdx.math.Rectangle;
 import Glow.generateGlowTextures;
 import GenTexture.generateTexture;
 
+import Enemy.damage.attack;
+
 public class enemy {
     generateGlowTextures glow;
     float screenW;
@@ -21,7 +23,10 @@ public class enemy {
     enemyArrayList pal;
     Rectangle bounds;
 
+    attack attack;
     public enemy(Color glowColour){
+        this.attack = new attack();
+
         screenW = Gdx.graphics.getWidth();
         screenH = Gdx.graphics.getHeight();
 
@@ -62,6 +67,10 @@ public class enemy {
 
     public Sprite getSprite(){
         return enemyShipSprite;
+    }
+
+    public void rings(){
+        attack.ringAttack(10);
     }
 
 //    public updateEnemyPosition(Camera camera){
