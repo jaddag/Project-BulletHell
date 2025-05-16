@@ -18,13 +18,13 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import java.util.Random;
 
-import HUD.button;
 import HUD.joyStick;
 import HUD.drawHUD;
 import MainMethod.bulletHellMain;
 import Player.player;
-import camera.camera;
-import camera.bgAdjustment;
+import Enemy.enemy;
+import Camera.camera;
+import Camera.bgAdjustment;
 
 public class gameScreen implements Screen {
         private final bulletHellMain game;
@@ -72,6 +72,8 @@ public class gameScreen implements Screen {
 
         Sprite shipSprite;
         Sprite shipGlow;
+        Sprite enemySprite;
+        Sprite enemyGlow;
         Random rand = new Random();
 
         int gridSize;
@@ -90,6 +92,7 @@ public class gameScreen implements Screen {
         drawHUD drawHUD;
         bgAdjustment bgAdjust;
         player player1;
+        enemy enemy1;
 
     public gameScreen(bulletHellMain game) {
         this.game = game;
@@ -127,6 +130,10 @@ public class gameScreen implements Screen {
         player1 = new player(new Color(157/255f, 0/255f, 255/255f, 1f));
         shipSprite = player1.getSprite();
         shipGlow = player1.getGlow();
+
+        enemy1 = new enemy(new Color(1f, 0f, 0f, 0f));
+        enemySprite = enemy1.getSprite();
+        enemyGlow = enemy1.getGlow();
 
         camera = new camera(shipSprite);
 
@@ -201,10 +208,11 @@ public class gameScreen implements Screen {
 
         backgroundDraw();
         updateBGPos(0f);
-        headUpDisplay();
-        spriteUpdate();
+        enemySpriteUpdate();
+        playerSpriteUpdate();
         updateCamera();
         draw();
+        headUpDisplay();
     }
 
     @Override
@@ -222,9 +230,14 @@ public class gameScreen implements Screen {
 
     }
 
-    private void spriteUpdate(){
+    private void playerSpriteUpdate(){
         shipSprite = player1.getSprite();
         player1.updateGlow();
+    }
+
+    private void enemySpriteUpdate(){
+        enemySprite = enemy1.getSprite();
+        enemy1.updateGlow();
     }
 
     private void headUpDisplay() {
@@ -234,7 +247,7 @@ public class gameScreen implements Screen {
 
         drawHUD.getHudViewport().apply();
         drawHUD.draw(touchPos);
-        drawHUD.devConsole("X: " + camera.getCameraPos().x + " Y: " + camera.getCameraPos().y + " Right Camera Border : " + bgAdjust.getCords() + " testL: " + bgAdjust.testL() + " testR: " + bgAdjust.testR() ) ;
+        drawHUD.devConsole("topBorder: " + camera.getTop() + " bottomBorder: " + camera.getBottom() + " leftBorder: " + camera.getLeft() + " rightBorder: " + camera.getRight() ) ;
 
     }
 
@@ -251,11 +264,14 @@ public class gameScreen implements Screen {
         shipGlow.draw(spriteBatch);
         shipSprite.draw(spriteBatch);
 
+        enemyGlow.draw(spriteBatch);
+        enemySprite.draw(spriteBatch);
+
         spriteBatch.end();
     }
 
     private void updateCamera(){
-        camera.update( 1f, 2f);
+        camera.update( 1f, 1f);
     }
 
     private void backgroundDraw() {

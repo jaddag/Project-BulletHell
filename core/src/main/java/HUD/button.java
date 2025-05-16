@@ -34,7 +34,7 @@ public class button {
     public void update(Vector2 touch){
 
 
-       
+
             if (touch == null) {
                 isPressed = false;
                 return;
@@ -47,6 +47,8 @@ public class button {
         }else{
             isPressed = false;
         }
+
+       return isPressed;
     }
 
 

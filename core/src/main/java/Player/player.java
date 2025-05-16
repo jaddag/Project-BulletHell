@@ -4,12 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Disposable;
 
-import genTexture.generateTexture;
+import GenTexture.generateTexture;
 import Glow.glow;
 
 public class player implements Disposable {
@@ -48,9 +47,9 @@ public class player implements Disposable {
 
         bounds = new Rectangle(shipSprite.getX(), shipSprite.getY(), shipSprite.getWidth(), shipSprite.getHeight());
 
-        shipSprite.setCenter((screenW/2), screenH/2);
+        shipSprite.setCenter((screenW), screenH);
 
-        glow = new glow(glowColour, sizeX, shipSprite);
+        glow = new glow(glowColour, sizeX*0.7f, shipSprite);
     }
 
 //    public void update(float delta) {
