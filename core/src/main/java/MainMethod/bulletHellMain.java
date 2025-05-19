@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import io.github.projectbullethell.loadingScreen;
 
+
 public class bulletHellMain extends Game {
 
     public SpriteBatch batch;
@@ -22,6 +23,7 @@ public class bulletHellMain extends Game {
         batch = new SpriteBatch();
         genEverytime = false;
         ls = new loadingScreen(this, genEverytime);
+
         assetManager = new AssetManager(fileName -> Gdx.files.local(fileName));
         this.setScreen(ls);
     }

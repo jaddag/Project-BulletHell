@@ -263,12 +263,6 @@ public class gameScreen implements Screen {
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
         font.getData().setScale(3f);
 
-        Texture test = loadAttacks.getAttackGridREACT();
-        Sprite testSprite = new Sprite(test);
-        testSprite.setOriginCenter();
-        testSprite.setX(screenW);
-        testSprite.setY(screenH);
-
         spriteBatch.begin();
 
 //            font.draw(spriteBatch, "FPS: " + Gdx.graphics.getFramesPerSecond() + " SR: " + screenW + " x " + screenH, 20, screenH - 30);
@@ -277,8 +271,6 @@ public class gameScreen implements Screen {
 
         shipGlow.draw(spriteBatch);
         shipSprite.draw(spriteBatch);
-
-        testSprite.draw(spriteBatch);
 
         enemyGlow.draw(spriteBatch);
         enemySprite.draw(spriteBatch);

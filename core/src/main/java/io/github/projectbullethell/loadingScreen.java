@@ -80,7 +80,7 @@ public class loadingScreen extends ApplicationAdapter implements Screen{
 
 
         if (progress >= 1f && checkAssetsExist) {
-            game.setScreen(new gameScreen(this.game));
+            game.setScreen(new startScreen(this.game));
         }
 
         loadScreenIcon();
