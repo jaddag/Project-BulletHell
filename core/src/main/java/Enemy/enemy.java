@@ -271,5 +271,9 @@ public class enemy {
             }
         }
     }
+
+    public ArrayList<attack> getAttackList() {
+        return attackList;
+    }
 }
 
