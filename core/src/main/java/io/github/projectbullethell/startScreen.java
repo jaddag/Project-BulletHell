@@ -94,7 +94,11 @@ public class startScreen implements Screen {
 
         text.setPosition(screenW / 2f - text.getWidth() / 2f, screenH / 2f - text.getHeight() / 2f);
 
-        startMusic();
+        if(game.isPlayMusic()){
+            startMusic();
+            game.falsePlay();
+        }
+
     }
 
     @Override

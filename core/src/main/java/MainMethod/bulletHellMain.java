@@ -11,6 +11,8 @@ import io.github.projectbullethell.loadingScreen;
 
 public class bulletHellMain extends Game {
 
+    boolean playMusic;
+
     public SpriteBatch batch;
     public AssetManager assetManager;
 
@@ -26,6 +28,8 @@ public class bulletHellMain extends Game {
 
         assetManager = new AssetManager(fileName -> Gdx.files.local(fileName));
         this.setScreen(ls);
+
+        playMusic = true;
     }
 
     public void render(){
@@ -38,5 +42,13 @@ public class bulletHellMain extends Game {
         if(genEverytime){
             ls.disposeTextures();
         }
+    }
+
+    public boolean isPlayMusic() {
+        return playMusic;
+    }
+
+    public void falsePlay(){
+        playMusic = false;
     }
 }
