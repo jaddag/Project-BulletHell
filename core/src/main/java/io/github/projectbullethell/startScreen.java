@@ -255,4 +255,8 @@ public class startScreen implements Screen {
         if (alphaBackground != null) alphaBackground.dispose();
         if (music != null) music.dispose();
     }
+
+
+
+
 }

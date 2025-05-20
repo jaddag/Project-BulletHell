@@ -26,77 +26,80 @@ import Enemy.enemy;
 import Enemy.damage.loadAttacks;
 import CameraClass.camera;
 import CameraClass.bgAdjustment;
+import Collision.collision;
 
 public class gameScreen implements Screen {
-        private final bulletHellMain game;
+    private final bulletHellMain game;
 
-        Texture backgroundTexture1;
-        Texture backgroundTexture2;
-        Texture backgroundTexture3;
-        Texture starBackground;
-        TextureRegion flippedStarBackground;
-        Texture alphaBackground;
+    Texture backgroundTexture1;
+    Texture backgroundTexture2;
+    Texture backgroundTexture3;
+    Texture starBackground;
+    TextureRegion flippedStarBackground;
+    Texture alphaBackground;
 
-        float shipSpeed;
-        float speed;
-        float speed1;
-        float speed2;
-        float speedSky;
-        float scrollY;
-        float scrollY1;
-        float scrollY2;
-        float scrollSkyTexture;
-
-
-        boolean enableInput;
-        boolean anim;
-
-        Texture dropTexture;
-        BitmapFont font;
-
-        Vector2 touchPos;
-
-        float worldWidth;
-        float worldHeight;
-        int screenW;
-        int screenH;
-        int finalRefreshRate;
-        float deltaTime;
-
-        SpriteBatch spriteBatch;
-        FitViewport viewport;
-        camera camera;
-
-        Rectangle shipRectangle;
-        Rectangle planetRectangle;
-        Sound dropSound;
-
-        Sprite shipSprite;
-        Sprite shipGlow;
-        Sprite enemySprite;
-        Sprite enemyGlow;
-        Random rand = new Random();
-
-        int gridSize;
-        joyStick js;
-        Vector2 jsCords;
-
-        float flyElapsed;
-
-        int time;
-        int timeCount;
-        Vector2 buttonCords;
-        Vector2 button2Cords;
+    float shipSpeed;
+    float speed;
+    float speed1;
+    float speed2;
+    float speedSky;
+    float scrollY;
+    float scrollY1;
+    float scrollY2;
+    float scrollSkyTexture;
 
 
+    boolean enableInput;
+    boolean anim;
 
-        drawHUD drawHUD;
-        bgAdjustment bgAdjust;
-        player player1;
-        enemy enemy1;
-        int sps = 0;
+    Texture dropTexture;
+    BitmapFont font;
 
-        loadAttacks loadAttacks;
+    Vector2 touchPos;
+
+    float worldWidth;
+    float worldHeight;
+    int screenW;
+    int screenH;
+    int finalRefreshRate;
+    float deltaTime;
+
+    SpriteBatch spriteBatch;
+    FitViewport viewport;
+    camera camera;
+
+    Rectangle shipRectangle;
+    Rectangle planetRectangle;
+    Sound dropSound;
+
+    Sprite shipSprite;
+    Sprite shipGlow;
+    Sprite enemySprite;
+    Sprite enemyGlow;
+    Random rand = new Random();
+
+    int gridSize;
+    joyStick js;
+    Vector2 jsCords;
+
+    float flyElapsed;
+
+    int time;
+    int timeCount;
+    Vector2 buttonCords;
+    Vector2 button2Cords;
+
+
+
+    drawHUD drawHUD;
+    bgAdjustment bgAdjust;
+    player player1;
+    enemy enemy1;
+    int sps = 0;
+
+    loadAttacks loadAttacks;
+
+    collision collision;
 
     public gameScreen(bulletHellMain game) {
         this.game = game;
@@ -161,6 +164,8 @@ public class gameScreen implements Screen {
         flippedStarBackground = new TextureRegion(starBackground);
         flippedStarBackground.flip(true, false);
 
+        //Collision Detection
+        collision = new collision(this.enemy1, this.player1);
     }
 
     public void getBG(){
@@ -219,6 +224,8 @@ public class gameScreen implements Screen {
         updateCamera();
         draw();
         headUpDisplay();
+        detectCollision();
+        killPlayer();
     }
 
     @Override
@@ -234,6 +241,12 @@ public class gameScreen implements Screen {
         spriteBatch.dispose();
         drawHUD.getSpriteBatch().dispose();
 
+    }
+
+    public void killPlayer(){
+        if(player1.getHealth() <= 0){
+            game.setScreen(new deathScreen(game));
+        }
     }
 
     private void playerSpriteUpdate(){
@@ -387,4 +400,10 @@ public class gameScreen implements Screen {
     public void hide() {
         // Optional: implement if needed
     }
+
+    public void detectCollision(){
+        collision.update();
+    }
+
+
 }
