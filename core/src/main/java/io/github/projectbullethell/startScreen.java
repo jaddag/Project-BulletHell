@@ -13,12 +13,15 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
+import com.badlogic.gdx.audio.Music;
 import io.github.projectbullethell.startscreenassets.startText;
 import GenTexture.generateTexture;
 
 import MainMethod.bulletHellMain;
 
 public class startScreen implements Screen {
+
+    private Music music;
 
     private ShapeRenderer shapeRenderer;
 
@@ -90,6 +93,8 @@ public class startScreen implements Screen {
         spriteH = text.getHeight();
 
         text.setPosition(screenW / 2f - text.getWidth() / 2f, screenH / 2f - text.getHeight() / 2f);
+
+        startMusic();
     }
 
     @Override
@@ -110,6 +115,7 @@ public class startScreen implements Screen {
         background();
         drawText();
         inputButton();
+
     }
 
     public void drawText(){
@@ -224,6 +230,16 @@ public class startScreen implements Screen {
     @Override
     public void hide() {}
 
+    public void startMusic() {
+
+        music = Gdx.audio.newMusic(Gdx.files.internal("audioFiles/LoveIs.mp3"));
+        music.setLooping(true);
+        music.setVolume(0.5f);
+
+        music.play();
+
+    }
+
     @Override
     public void dispose() {
         shapeRenderer.dispose();
@@ -233,5 +249,6 @@ public class startScreen implements Screen {
         if (backgroundTexture3 != null) backgroundTexture3.dispose();
         if (starBackground != null) starBackground.dispose();
         if (alphaBackground != null) alphaBackground.dispose();
+        if (music != null) music.dispose();
     }
 }
