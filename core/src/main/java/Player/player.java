@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -24,14 +25,18 @@ public class player implements Disposable {
     generateTexture genT;
     playerArrayList pal;
     Rectangle bounds;
+    int health;
+    int size;
 
     public player(Color glowColour){
 
         screenW = Gdx.graphics.getWidth();
         screenH = Gdx.graphics.getHeight();
 
-        sizeX = (float)Gdx.graphics.getWidth()/10;
-        sizeY = (float)Gdx.graphics.getHeight()/10;
+        size = 20;
+
+        sizeX = (float)Gdx.graphics.getWidth()/size;
+        sizeY = (float)Gdx.graphics.getHeight()/size;
 
         genT = new generateTexture();
         pal = new playerArrayList();
@@ -72,6 +77,48 @@ public class player implements Disposable {
     public Sprite getSprite(){
         return shipSprite;
     }
+        private int maxHealth;
+        private int currentHealth;
+
+    public void HealthBar(int maxHealth) {
+        this.maxHealth = maxHealth;
+        this.currentHealth = maxHealth;
+    }
+
+    public void render(ShapeRenderer shapeRenderer, float x, float y, float width, float height) {
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+        // Background
+        shapeRenderer.setColor(Color.DARK_GRAY);
+        shapeRenderer.rect(x, y, width, height);
+
+        // Foreground (HP)
+        shapeRenderer.setColor(Color.RED);
+        float healthPercent = (float) currentHealth / maxHealth;
+        shapeRenderer.rect(x, y, width * healthPercent, height);
+
+        shapeRenderer.end();
+    }
+
+    public void takeDamage(int amount) {
+        currentHealth -= amount;
+        if (currentHealth < 0) currentHealth = 0;
+    }
+
+    public void heal(int amount) {
+        currentHealth += amount;
+        if (currentHealth > maxHealth) currentHealth = maxHealth;
+    }
+
+    public int getHealth() {
+        return currentHealth;
+    }
+
+    public void setHealth(int health) {
+        this.currentHealth = Math.max(0, Math.min(health, maxHealth));
+    }
+
+
 
     @Override
     public void dispose() {

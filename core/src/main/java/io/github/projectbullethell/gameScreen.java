@@ -278,7 +278,7 @@ public class gameScreen implements Screen {
     }
 
     private void updateCamera(){
-        camera.update( 1f, 2f);
+        camera.update( 1f, 1f);
     }
 
     private void backgroundDraw() {

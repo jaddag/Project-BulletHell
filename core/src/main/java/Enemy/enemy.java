@@ -55,6 +55,7 @@ public class enemy {
     boolean stopGen;
     attack firstAttack;
     boolean firstDraw;
+    int offset;
 
     ArrayList<attack> attackList;
     public enemy(Color glowColour){
@@ -108,6 +109,8 @@ public class enemy {
         index = 0;
         stopGen = true;
         firstDraw = true;
+
+        offset = 0;
     }
 
     public void updateGlow(){
@@ -132,7 +135,7 @@ public class enemy {
 
         delayTimer += delta;
 
-        if (delayTimer >= 1f || firstDraw) {
+        if (delayTimer >= 0.7f || firstDraw) {
             if (attackList.isEmpty() || !areAllProjectilesOutside(attackList.get(0))) {
                 genSingleRings();
             }
@@ -141,7 +144,7 @@ public class enemy {
         }
 
         for(attack elem: attackList) {
-            shootRings(500, elem);
+            shootRings(600, elem);
             updateRings(delta, elem);
             showRings(elem);
 
@@ -241,14 +244,15 @@ public class enemy {
         }
 
         for(attack elem: attackList){
-            elem.ringAttack(10, 250f, enemyShipSprite, 0);
+            elem.ringAttack(12, 250f, enemyShipSprite, 0);
         }
     }
 
     public void genSingleRings(){
         if (stopGen) {
             attack atk = new attack();
-            atk.ringAttack(10, 250f, enemyShipSprite, 0);
+            atk.ringAttack(12, 250f, enemyShipSprite, offset);
+            offset = offset + 10;
             attackList.add(atk);
 
             if (firstAttack == null) {
