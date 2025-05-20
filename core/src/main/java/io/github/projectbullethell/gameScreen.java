@@ -243,8 +243,7 @@ public class gameScreen implements Screen {
 
     private void enemySpriteUpdate(){
         enemySprite = enemy1.getSprite();
-        enemy1.updateGlow();
-        enemy1.rings();
+        enemy1.circularAttack(camera, deltaTime);
     }
 
     private void headUpDisplay() {
@@ -279,7 +278,7 @@ public class gameScreen implements Screen {
     }
 
     private void updateCamera(){
-        camera.update( 1f, 1f);
+        camera.update( 1f, 2f);
     }
 
     private void backgroundDraw() {

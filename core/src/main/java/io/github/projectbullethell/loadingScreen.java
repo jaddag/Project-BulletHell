@@ -97,7 +97,7 @@ public class loadingScreen extends ApplicationAdapter implements Screen{
 
     public void loadAssets(){
         if(genEverytimeFlag){
-            size = 10;
+            size = 7;
             rand = new Random();
             bg = new bgGenerator();
             gat = new generateGlowTextures();
