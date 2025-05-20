@@ -2,6 +2,7 @@ package io.github.projectbullethell;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 
 import MainMethod.bulletHellMain;
@@ -10,9 +11,13 @@ public class deathScreen implements Screen {
 
     private final bulletHellMain game;
     private float timer = 0f;
+    Music music;
 
-    public deathScreen(bulletHellMain game) {
+    public deathScreen(bulletHellMain game, Music music) {
         this.game = game;
+        this.music = music;
+
+        this.music.stop();
     }
 
     @Override

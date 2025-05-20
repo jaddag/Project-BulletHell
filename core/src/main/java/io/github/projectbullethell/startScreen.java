@@ -94,10 +94,7 @@ public class startScreen implements Screen {
 
         text.setPosition(screenW / 2f - text.getWidth() / 2f, screenH / 2f - text.getHeight() / 2f);
 
-        if(game.isPlayMusic()){
-            startMusic();
-            game.falsePlay();
-        }
+        startMusic();
 
     }
 
@@ -215,7 +212,7 @@ public class startScreen implements Screen {
 
             if (touchX >= rectX && touchX <= rectX + rectWidth &&
                 touchY >= rectY && touchY <= rectY + rectHeight) {
-                game.setScreen(new gameScreen(game));
+                game.setScreen(new gameScreen(game, music));
             }
         }
     }

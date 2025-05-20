@@ -26,9 +26,11 @@ public class joyStick {
     boolean touchingJoyStick;
     boolean firstTouch;
     private int activePointer;
+    String area;
+    Vector2 shootDirection;
 
-
-    public joyStick(int buttonSize, Vector2 cords, player player){
+    public joyStick(int buttonSize, Vector2 cords, player player, String area){
+        this.area = area;
         this.player = player;
 
         shapeRendererJoystick = new ShapeRenderer();
@@ -41,10 +43,12 @@ public class joyStick {
 
         radiusBigCircle = buttonSize;
         radiusSmallCircle = (int)(radiusBigCircle * 0.3f);
-        touchArea = new Rectangle(0,0, Gdx.graphics.getWidth()/2f, Gdx.graphics.getHeight());
+
+        if(area.equals("left"))touchArea = new Rectangle(0,0, Gdx.graphics.getWidth()/2f, Gdx.graphics.getHeight());
+        if(area.equals("right"))touchArea = new Rectangle(Gdx.graphics.getWidth()/2f,0, Gdx.graphics.getWidth()/2f, Gdx.graphics.getHeight());
 
         activePointer = -1;
-
+        shootDirection = new Vector2();
     }
 
     public void moveJoyStick (float speed, Vector2 touchPos) {
@@ -108,9 +112,13 @@ public class joyStick {
 //                }
             }
 
-        player.getSprite().translateX((smallCircleCords.x - bigCircleCords.x)/radiusBigCircle*speed);
-        player.getSprite().translateY((smallCircleCords.y-bigCircleCords.y)/radiusBigCircle*speed);
-
+        if(area.equals("left")){
+            player.getSprite().translateX((smallCircleCords.x - bigCircleCords.x)/radiusBigCircle*speed);
+            player.getSprite().translateY((smallCircleCords.y-bigCircleCords.y)/radiusBigCircle*speed);
+        }
+        if(area.equals("right")){
+            shootDirection.set((smallCircleCords.x - bigCircleCords.x)/radiusBigCircle*speed, (smallCircleCords.y-bigCircleCords.y)/radiusBigCircle*speed);
+        }
     }
 
     public void draw(){

@@ -2,6 +2,7 @@ package io.github.projectbullethell;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -30,6 +31,7 @@ import Collision.collision;
 
 public class gameScreen implements Screen {
     private final bulletHellMain game;
+    private final Music music;
 
     Texture backgroundTexture1;
     Texture backgroundTexture2;
@@ -81,14 +83,13 @@ public class gameScreen implements Screen {
     int gridSize;
     joyStick js;
     Vector2 jsCords;
+    Vector2 jsCords2;
 
     float flyElapsed;
 
     int time;
     int timeCount;
     Vector2 buttonCords;
-    Vector2 button2Cords;
-
 
 
     drawHUD drawHUD;
@@ -101,8 +102,9 @@ public class gameScreen implements Screen {
 
     collision collision;
 
-    public gameScreen(bulletHellMain game) {
+    public gameScreen(bulletHellMain game, Music music) {
         this.game = game;
+        this.music = music;
     }
 
         @Override
@@ -186,11 +188,11 @@ public class gameScreen implements Screen {
     }
 
     public void HUD(){
-        buttonCords = new Vector2(screenW -200f, 200f);
-        button2Cords = new Vector2(0f,0f);
+//        buttonCords = new Vector2(screenW -200f, 200f);
         jsCords = new Vector2(screenW*0.1f, screenH*0.2f);
+        jsCords2 = new Vector2(screenW*0.9f, screenH*0.2f);
 
-        drawHUD = new drawHUD(true, enableInput, jsCords, buttonCords, player1);
+        drawHUD = new drawHUD(true, enableInput, jsCords, jsCords2, player1);
         drawHUD.setShipSpeed(shipSpeed);
     }
 
@@ -245,7 +247,7 @@ public class gameScreen implements Screen {
 
     public void killPlayer(){
         if(player1.getHealth() <= 0){
-            game.setScreen(new deathScreen(game));
+            game.setScreen(new deathScreen(game, music));
         }
     }
 
