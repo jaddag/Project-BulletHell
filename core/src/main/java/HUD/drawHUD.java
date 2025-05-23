@@ -71,7 +71,7 @@ public class drawHUD {
         this.touchPos = touchPos;
 
         devText();
-        updateMultiTouch(); // Multitouch methode
+        updateMultiTouch();
         //updateButton();
         js1.draw();
         js2.draw();
@@ -101,7 +101,6 @@ public class drawHUD {
                 Vector2 fingerPos = new Vector2(Gdx.input.getX(i), Gdx.input.getY(i));
                 hudViewport.unproject(fingerPos);
 
-// prüft Joystick
                 if (!joystickHandled && js1.getTouchArea().contains(fingerPos)) {
                     js1.moveJoyStick(shipSpeed, fingerPos);
                     joystickHandled = true;
@@ -114,7 +113,6 @@ public class drawHUD {
 
                 }
 
-//                // prüft button
 //                if (fingerPos.dst(button.getButtonPos()) <= button.getButtonSize() / 2f) {
 //                    buttonPressed = true;
 //                }
@@ -129,6 +127,33 @@ public class drawHUD {
 
 //        if ( !Gdx.input.isTouched()){
 //            button.update(null);
+        }
+    }
+
+    private void updateMultiTouchAlt() {
+        if (!enableInput) return;
+
+        boolean joystickHandled = false;
+
+        for (int i = 0; i < 2; i++) {
+            if (Gdx.input.isTouched(i)) {
+                Vector2 fingerPos = new Vector2(Gdx.input.getX(i), Gdx.input.getY(i));
+                hudViewport.unproject(fingerPos);
+
+                if (js1.getTouchArea().contains(fingerPos)) {
+                    js1.moveJoyStick(shipSpeed, fingerPos);
+                }
+
+                if (js2.getTouchArea().contains(fingerPos)) {
+                    js2.moveJoyStick(shipSpeed, fingerPos);
+                }
+            }
+        }
+
+
+        if (!joystickHandled) {
+            js1.reset();
+            js2.reset();
         }
     }
 

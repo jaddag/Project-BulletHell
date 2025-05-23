@@ -181,7 +181,7 @@ public class bgGenerator {
                     case 17: color = new Color(204/255f, 172/255f, 0/255f, 1f); break;
                     case 18: color = new Color(204/255f, 204/255f, 179/255f, 1f); break;
                     case 19: color = new Color(204/255f, 200/255f, 200/255f, 1f); break;
-                    case 21: color = new Color(0/255f, 0/255f, 90/255f, 1f); break; // darkblue
+                    case 21: color = new Color(0/255f, 0/255f, 90/255f, 1f); break;
                 }
 
                 boolBrightChance = false;

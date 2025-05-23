@@ -22,7 +22,7 @@ public class collision {
     public void update(){
         for(attack elem: enemy.getAttackList()){
             for(Sprite elem1: elem.getRings()){
-                if (elem1.getBoundingRectangle().overlaps(player.getSprite().getBoundingRectangle())) {
+                if (elem1.getBoundingRectangle().overlaps(player.getBounds())) {
                     long currentTime = System.currentTimeMillis();
                     if (!playerInvincibilityFrames && currentTime - lastHitTime >= 1000) {
                         playerInvincibilityFrames = true;

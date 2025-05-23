@@ -51,7 +51,14 @@ public class player implements Disposable {
         shipSprite.setSize(sizeX, sizeX);
         shipSprite.setOriginCenter();
 
-        bounds = new Rectangle(shipSprite.getX(), shipSprite.getY(), shipSprite.getWidth(), shipSprite.getHeight());
+        bounds = new Rectangle(
+            shipSprite.getX() + shipSprite.getWidth() * 0.25f,
+            shipSprite.getY() + shipSprite.getHeight() * 0.25f,
+            shipSprite.getWidth() * 0.5f,
+            shipSprite.getHeight() * 0.5f
+        );
+
+//        bounds = new Rectangle(shipSprite.getX(), shipSprite.getY(), shipSprite.getWidth(), shipSprite.getHeight());
 
         shipSprite.setCenter((screenW), screenH);
 
@@ -70,9 +77,17 @@ public class player implements Disposable {
     public Sprite getGlow(){
         return glow.getSprite();
     }
-    public static Rectangle getBounds() {
-        return null;
+
+    public Rectangle getBounds(){
+        bounds.set(
+            shipSprite.getX() + shipSprite.getWidth() * 0.25f,
+            shipSprite.getY() + shipSprite.getHeight() * 0.25f,
+            shipSprite.getWidth() * 0.5f,
+            shipSprite.getHeight() * 0.5f
+        );
+        return bounds;
     }
+
 
     public Sprite getSprite(){
         return shipSprite;
