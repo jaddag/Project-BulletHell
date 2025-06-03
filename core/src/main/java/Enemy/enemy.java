@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -15,7 +16,7 @@ import CameraClass.camera;
 import Glow.generateGlowTextures;
 import GenTexture.generateTexture;
 
-import Enemy.damage.attack;
+import Enemy.damage.attackEnemy;
 
 public class enemy {
     generateGlowTextures glow;
@@ -30,7 +31,7 @@ public class enemy {
     Rectangle bounds;
     SpriteBatch tempSpriteBatch;
 
-    attack attack;
+    attackEnemy attackEnemy;
 
     boolean shot;
 
@@ -53,25 +54,31 @@ public class enemy {
     int degree;
     int index;
     boolean stopGen;
-    attack firstAttack;
+    attackEnemy firstAttackEnemy;
     boolean firstDraw;
     int offset;
+    ArrayList<Rectangle> allHitBoxes;
 
-    ArrayList<attack> attackList;
+    ArrayList<attackEnemy> attackEnemyList;
+
+    int currentHealth;
+    int maxHealth;
+    ShapeRenderer healthShape;
+    float borderThickness;
     public enemy(Color glowColour){
-        attackList = new ArrayList<>();
-        firstAttack = new attack();
+        attackEnemyList = new ArrayList<>();
+        firstAttackEnemy = new attackEnemy();
 
-        this.attack = new attack();
+        this.attackEnemy = new attackEnemy();
         this.tempSpriteBatch = new SpriteBatch();
 
-        screenW = Gdx.graphics.getWidth();
-        screenH = Gdx.graphics.getHeight();
+        screenW = Gdx.graphics.getBackBufferWidth();
+        screenH = Gdx.graphics.getBackBufferHeight();
 
         size = 7;
 
-        sizeX = (float)Gdx.graphics.getWidth()/size;
-        sizeY = (float)Gdx.graphics.getHeight()/size;
+        sizeX = screenW/size;
+        sizeY = screenH/size;
 
         genT = new generateTexture();
         pal = new enemyArrayList();
@@ -111,6 +118,53 @@ public class enemy {
         firstDraw = true;
 
         offset = 0;
+
+        allHitBoxes = new ArrayList<>();
+
+        healthShape = new ShapeRenderer();
+
+        borderThickness = 2f;
+    }
+
+    public void HealthBar(int maxHealth) {
+        this.maxHealth = maxHealth;
+        this.currentHealth = maxHealth;
+    }
+
+    public void renderHealthBar(float x, float y, float width, float height) {
+        healthShape.begin(ShapeRenderer.ShapeType.Filled);
+
+        // Fake border by drawing a larger dark rectangle
+        healthShape.setColor(Color.WHITE);
+        healthShape.rect(x - borderThickness, y - borderThickness, width + 2 * borderThickness, height + 2 * borderThickness);
+
+        // Background
+        healthShape.setColor(Color.DARK_GRAY);
+        healthShape.rect(x, y, width, height);
+
+        // Foreground (HP)
+        healthShape.setColor(Color.RED);
+        float healthPercent = (float) currentHealth / maxHealth;
+        healthShape.rect(x, y, width * healthPercent, height);
+        healthShape.end();
+    }
+
+    public void takeDamage(int amount) {
+        currentHealth -= amount;
+        if (currentHealth < 0) currentHealth = 0;
+    }
+
+    public void heal(int amount) {
+        currentHealth += amount;
+        if (currentHealth > maxHealth) currentHealth = maxHealth;
+    }
+
+    public int getHealth() {
+        return currentHealth;
+    }
+
+    public void setHealth(int health) {
+        this.currentHealth = Math.max(0, Math.min(health, maxHealth));
     }
 
     public void updateGlow(){
@@ -120,6 +174,12 @@ public class enemy {
     public Sprite getGlow(){
         return glow.getSprite();
     }
+
+    public ArrayList<Rectangle> getRingBounds(){
+        return allHitBoxes;
+    }
+
+
 
     public void circularAttack(camera cam, float delta) {
         // Increment delay timer and update delay flag
@@ -136,14 +196,14 @@ public class enemy {
         delayTimer += delta;
 
         if (delayTimer >= 0.7f || firstDraw) {
-            if (attackList.isEmpty() || !areAllProjectilesOutside(attackList.get(0))) {
+            if (attackEnemyList.isEmpty() || !areAllProjectilesOutside(attackEnemyList.get(0))) {
                 genSingleRings();
             }
             delayTimer = 0f;
             firstDraw = false;
         }
 
-        for(attack elem: attackList) {
+        for(attackEnemy elem: attackEnemyList) {
             shootRings(600, elem);
             updateRings(delta, elem);
             showRings(elem);
@@ -158,9 +218,14 @@ public class enemy {
                 }
             }
         }
+        attackEnemy.updateHitBoxes();
+
+        allHitBoxes.clear();
+        for (attackEnemy atk : attackEnemyList) {
+            allHitBoxes.addAll(atk.getHitBoxes());
+        }
 
 //        updateRotation();
-
     }
 
 
@@ -185,15 +250,15 @@ public class enemy {
         return enemyShipSprite;
     }
 
-    public boolean areAllProjectilesOutside(attack attack) {
+    public boolean areAllProjectilesOutside(attackEnemy attackEnemy) {
         Rectangle playfield = new Rectangle(
             0,
             0,
-            Gdx.graphics.getWidth() * 2f,
-            Gdx.graphics.getHeight() * 2f
+            screenW * 2f,
+            screenH * 2f
         );
 
-        for(Sprite elem :attack.getRings()){
+        for(Sprite elem : attackEnemy.getRings()){
             Rectangle ringBounds = new Rectangle(
                 elem.getX(),
                 elem.getY(),
@@ -208,18 +273,24 @@ public class enemy {
         return true; // All rings are outside
     }
 
-    public void showRings(attack attack){
-        for(Sprite elem: attack.getRings()){
-            tempSpriteBatch.begin();
+    public void showRings(attackEnemy attackEnemy){
+        tempSpriteBatch.begin();
+        for(Sprite elem: attackEnemy.getRings()){
             elem.draw(tempSpriteBatch);
-            tempSpriteBatch.end();
+        }
+        tempSpriteBatch.end();
+    }
+
+    public void initBatchIfNeeded() {
+        if (tempSpriteBatch == null) {
+            tempSpriteBatch = new SpriteBatch();
         }
     }
 
-    public void shootRings(float speed, attack attack){
-        for(int i = 0; i < attack.getRings().size(); i++){
-            Sprite elem = attack.getRings().get(i);
-            Vector2 velocity = attack.getRingVelocities().get(i);
+    public void shootRings(float speed, attackEnemy attackEnemy){
+        for(int i = 0; i < attackEnemy.getRings().size(); i++){
+            Sprite elem = attackEnemy.getRings().get(i);
+            Vector2 velocity = attackEnemy.getRingVelocities().get(i);
 
             currentRingCords.set((elem.getX() + elem.getWidth()/2f), (elem.getY() + elem.getHeight()/2f));
 
@@ -229,40 +300,41 @@ public class enemy {
         }
     }
 
-    public void updateRings(float deltaTime, attack attack){
-        for (int i = 0; i < attack.getRings().size(); i++) {
-            Sprite ring = attack.getRings().get(i);
-            Vector2 vel = attack.getRingVelocities().get(i);
+    public void updateRings(float deltaTime, attackEnemy attackEnemy){
+        for (int i = 0; i < attackEnemy.getRings().size(); i++) {
+            Sprite ring = attackEnemy.getRings().get(i);
+            Vector2 vel = attackEnemy.getRingVelocities().get(i);
             ring.translate(vel.x * deltaTime, vel.y * deltaTime);
         }
+        attackEnemy.updateHitBoxes();
     }
 
     public void genRings() {
-        attackList.clear();
+        attackEnemyList.clear();
         for (int i = 0; i <= howmanyrings; i++) {
-            attackList.add(new attack());
+            attackEnemyList.add(new attackEnemy());
         }
 
-        for(attack elem: attackList){
+        for(attackEnemy elem: attackEnemyList){
             elem.ringAttack(12, 250f, enemyShipSprite, 0);
         }
     }
 
     public void genSingleRings(){
         if (stopGen) {
-            attack atk = new attack();
+            attackEnemy atk = new attackEnemy();
             atk.ringAttack(12, 250f, enemyShipSprite, offset);
             offset = offset + 10;
-            attackList.add(atk);
+            attackEnemyList.add(atk);
 
-            if (firstAttack == null) {
-                firstAttack = atk;
+            if (firstAttackEnemy == null) {
+                firstAttackEnemy = atk;
             }
         }
     }
 
     public void updateRotation(){
-        for(attack elem: attackList){
+        for(attackEnemy elem: attackEnemyList){
             degree++;
             elem.rotateAllRings(degree, enemyShipSprite);
 
@@ -272,8 +344,8 @@ public class enemy {
         }
     }
 
-    public ArrayList<attack> getAttackList() {
-        return attackList;
+    public ArrayList<attackEnemy> getAttackList() {
+        return attackEnemyList;
     }
 }
 

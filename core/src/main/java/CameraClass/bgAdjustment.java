@@ -25,8 +25,8 @@ public class bgAdjustment{
     float leftBorder;
 
     public bgAdjustment(camera camera, float scrollrate){
-        screenW = Gdx.graphics.getWidth();
-        screenH = Gdx.graphics.getHeight();
+        screenW = Gdx.graphics.getBackBufferWidth();
+        screenH = Gdx.graphics.getBackBufferHeight();
 
         leftBorderBGR = 0f;
         leftBorderBGL = 0f;

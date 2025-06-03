@@ -1,4 +1,4 @@
-# Project-BulletHell
+# Project-BulletHell IOS V
 
 A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
 
@@ -7,7 +7,9 @@ This project was generated with a template including simple application launcher
 ## Platforms
 
 - `core`: Main module with the application logic shared by all platforms.
+- `lwjgl3`: Primary desktop platform using LWJGL3; was called 'desktop' in older docs.
 - `android`: Android mobile platform. Needs Android SDK.
+- `ios`: iOS mobile platform using RoboVM.
 
 ## Gradle
 
@@ -26,6 +28,8 @@ Useful Gradle tasks and flags:
 - `clean`: removes `build` folders, which store compiled classes and built archives.
 - `eclipse`: generates Eclipse project data.
 - `idea`: generates IntelliJ project data.
+- `lwjgl3:jar`: builds application's runnable jar, which can be found at `lwjgl3/build/libs`.
+- `lwjgl3:run`: starts the application.
 - `test`: runs unit tests (if any).
 
 Note that most tasks that are not specific to a single project can be run with `name:` prefix, where the `name` should be replaced with the ID of a specific project.

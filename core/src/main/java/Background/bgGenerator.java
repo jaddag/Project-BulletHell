@@ -20,9 +20,12 @@ public class bgGenerator {
     boolean boolDarkViolettChance;
     boolean boolBlackChance;
 
+    int screenW = Gdx.graphics.getBackBufferWidth();
+    int screenH = Gdx.graphics.getBackBufferHeight();
+
     int rnd;
-    float worldWidth = Gdx.graphics.getWidth();
-    float worldHeight = Gdx.graphics.getHeight();
+    float worldWidth = screenW;
+    float worldHeight = screenH;
 
     public Texture starGen(int seed, int particleAmount, float alphaValue, float  planetSpawnRate , boolean planet, int maxPixelSize, int minPixelSize) throws Exception{
 
@@ -34,13 +37,13 @@ public class bgGenerator {
 
 //        int gridSize = size;
 
-        Pixmap pixmap = new Pixmap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
+        Pixmap pixmap = new Pixmap(screenW, screenH, Pixmap.Format.RGBA8888);
         pixmap.setColor(0,0,0,0);
         pixmap.fill();
 
-        int cellWidth = Gdx.graphics.getWidth()/particleAmount;
+        int cellWidth = (int)screenW/particleAmount;
 
-        int cellHeight = Gdx.graphics.getHeight()/particleAmount;
+        int cellHeight = (int)screenH/particleAmount;
 
 
         for (int row = 0; row < particleAmount; row++) {
@@ -87,13 +90,13 @@ public class bgGenerator {
 
 //        int gridSize = size;
 
-        Pixmap pixmap = new Pixmap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
+        Pixmap pixmap = new Pixmap(screenW, screenH, Pixmap.Format.RGBA8888);
         pixmap.setColor(0,0,0,0);
         pixmap.fill();
 
-        int cellWidth = Gdx.graphics.getWidth()/particleAmount;
+        int cellWidth = (int)screenW/particleAmount;
 
-        int cellHeight = Gdx.graphics.getHeight()/particleAmount;
+        int cellHeight = (int)screenH/particleAmount;
 
 
         for (int row = 0; row < particleAmount; row++) {

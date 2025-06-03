@@ -28,11 +28,12 @@ import Enemy.damage.loadAttacks;
 import CameraClass.camera;
 import CameraClass.bgAdjustment;
 import Collision.collision;
+import ShowBounds.showBounds;
 
 public class gameScreen implements Screen {
     private final bulletHellMain game;
     private final Music music;
-
+    showBounds showBounds;
     Texture backgroundTexture1;
     Texture backgroundTexture2;
     Texture backgroundTexture3;
@@ -130,8 +131,8 @@ public class gameScreen implements Screen {
         speed2 = 20f;
         speedSky = 10f;
 
-        screenW = Gdx.graphics.getWidth();
-        screenH = Gdx.graphics.getHeight();
+        screenW = Gdx.graphics.getBackBufferWidth();
+        screenH = Gdx.graphics.getBackBufferHeight();
         finalRefreshRate = Gdx.graphics.getDisplayMode().refreshRate;
 
         font = new BitmapFont();
@@ -168,6 +169,8 @@ public class gameScreen implements Screen {
 
         //Collision Detection
         collision = new collision(this.enemy1, this.player1);
+
+        setHitBox();
     }
 
     public void getBG(){
@@ -189,10 +192,10 @@ public class gameScreen implements Screen {
 
     public void HUD(){
 //        buttonCords = new Vector2(screenW -200f, 200f);
-        jsCords = new Vector2(screenW*0.1f, screenH*0.2f);
-        jsCords2 = new Vector2(screenW*0.9f, screenH*0.2f);
+        jsCords = new Vector2(Gdx.graphics.getWidth()*0.1f, Gdx.graphics.getHeight()*0.2f);
+        jsCords2 = new Vector2(Gdx.graphics.getWidth()*0.9f, Gdx.graphics.getHeight()*0.2f);
 
-        drawHUD = new drawHUD(true, enableInput, jsCords, jsCords2, player1);
+        drawHUD = new drawHUD(true, enableInput, jsCords, jsCords2, player1, enemy1);
         drawHUD.setShipSpeed(shipSpeed);
     }
 
@@ -204,21 +207,6 @@ public class gameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-//            if (anim) {
-//                if (animStart) {
-//                    flyStartY = shipSprite.getY();
-//                    flyElapsed = 0f;
-//                    animStart = false;
-//                }
-//                flyAnim(2f, 400f, 0.02f);
-//            }
-//
-//            timeCount++;
-//            if(timeCount == 60){
-//                time++;
-//                timeCount =0;
-//            }
-
         backgroundDraw();
         updateBGPos(0f);
         enemySpriteUpdate();
@@ -228,6 +216,8 @@ public class gameScreen implements Screen {
         headUpDisplay();
         detectCollision();
         killPlayer();
+        killBoss();
+        HitBox();
     }
 
     @Override
@@ -245,19 +235,38 @@ public class gameScreen implements Screen {
 
     }
 
+    public void setHitBox(){
+        showBounds = new showBounds();
+    }
+
+    public void HitBox(){
+        showBounds.showB(camera, player1.getBounds());
+        for (Rectangle elem : enemy1.getRingBounds()) {
+            showBounds.showB(camera, elem);
+        }
+    }
+
     public void killPlayer(){
         if(player1.getHealth() <= 0){
             game.setScreen(new deathScreen(game, music));
         }
     }
 
+    public void killBoss(){
+        if(enemy1.getHealth() <= 0){
+            game.setScreen(new winScreen(game, music));
+        }
+    }
+
     private void playerSpriteUpdate(){
         shipSprite = player1.getSprite();
         player1.updateGlow();
+        player1.updateShot(camera);
     }
 
     private void enemySpriteUpdate(){
         enemySprite = enemy1.getSprite();
+        enemy1.initBatchIfNeeded();
         enemy1.circularAttack(camera, deltaTime);
     }
 
@@ -269,7 +278,6 @@ public class gameScreen implements Screen {
         drawHUD.getHudViewport().apply();
         drawHUD.draw(touchPos);
         drawHUD.devConsole("topBorder: " + camera.getTop() + " bottomBorder: " + camera.getBottom() + " leftBorder: " + camera.getLeft() + " rightBorder: " + camera.getRight() ) ;
-
     }
 
     private void draw() {
@@ -278,10 +286,6 @@ public class gameScreen implements Screen {
         font.getData().setScale(3f);
 
         spriteBatch.begin();
-
-//            font.draw(spriteBatch, "FPS: " + Gdx.graphics.getFramesPerSecond() + " SR: " + screenW + " x " + screenH, 20, screenH - 30);
-//            font.draw(spriteBatch, "PosX: " + (shipSprite.getX() + (shipSprite.getWidth() / 2)) + " PoxY: " + (shipSprite.getY() + (shipSprite.getHeight() / 2)), 20, screenH - 90);
-//            font.draw(spriteBatch, "dev Options:" , 20, screenH - 210);
 
         shipGlow.draw(spriteBatch);
         shipSprite.draw(spriteBatch);
@@ -310,7 +314,7 @@ public class gameScreen implements Screen {
 
         spriteBatch.draw(starBackground, 0, - scrollSkyTexture, screenW, screenH);
         spriteBatch.draw(starBackground, 0, screenH - scrollSkyTexture, screenW, screenH);
-         spriteBatch.draw(starBackground, 0, (screenH*2) - scrollSkyTexture, screenW, screenH);
+        spriteBatch.draw(starBackground, 0, (screenH*2) - scrollSkyTexture, screenW, screenH);
 
         spriteBatch.draw(flippedStarBackground, screenW, - scrollSkyTexture, screenW, screenH);
         spriteBatch.draw(flippedStarBackground, screenW, screenH - scrollSkyTexture, screenW, screenH);
@@ -344,10 +348,6 @@ public class gameScreen implements Screen {
         spriteBatch.draw(backgroundTexture3, screenW, screenH-scrollY2, screenW, screenH);
         spriteBatch.draw(backgroundTexture3, screenW, (screenH*2)-scrollY2, screenW, screenH);
 
-//        spriteBatch.draw(planet4, 300-gridSize, -100);
-//        spriteBatch.draw(planet2, 400-gridSize, -200);
-//        spriteBatch.draw(planet3, 1700-gridSize, -100);
-
         spriteBatch.end();
     }
 
@@ -372,30 +372,6 @@ public class gameScreen implements Screen {
         if(scrollSkyTexture >= screenH){
             scrollSkyTexture = 0;
         }
-    }
-
-    private void flyAnim(float time, float FlyingYPos) {
-        if(shipSprite.getY() >= 400){
-            anim = false;
-        }
-
-        float t = Math.min(Gdx.graphics.getDeltaTime() / time, 1f);
-
-        float posY = shipSprite.getY() + (FlyingYPos - shipSprite.getY()) * circOut(t);
-
-        shipSprite.setY(posY);
-    }
-
-    public void logic(){
-        shipSprite.setX(MathUtils.clamp(shipSprite.getX(), 0, worldWidth));
-
-        if (shipRectangle.overlaps(planetRectangle)){
-            dropSound.play();
-        }
-    }
-
-    public float circOut(float t) {
-        return (float)Math.sqrt(1 - (t - 1) * (t - 1));
     }
 
     @Override

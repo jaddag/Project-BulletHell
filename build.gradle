@@ -9,7 +9,7 @@ buildscript {
     maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
   }
   dependencies {
-    classpath "com.android.tools.build:gradle:8.6.1"
+    classpath "com.android.tools.build:gradle:8.7.3"
 
   }
 }
@@ -58,7 +58,7 @@ configure(subprojects - project(':android')) {
 
 subprojects {
   version = "$projectVersion"
-  ext.appName = 'Project-BulletHell'
+  ext.appName = 'Project-BulletHell IOS V'
   repositories {
     mavenCentral()
     maven { url 'https://s01.oss.sonatype.org' }
@@ -70,4 +70,4 @@ subprojects {
   }
 }
 
-eclipse.project.name = 'Project-BulletHell' + '-parent'
+eclipse.project.name = 'Project-BulletHell IOS V' + '-parent'

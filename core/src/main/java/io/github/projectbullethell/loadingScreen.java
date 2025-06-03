@@ -3,14 +3,18 @@ package io.github.projectbullethell;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import java.util.Random;
 
@@ -51,17 +55,29 @@ public class loadingScreen extends ApplicationAdapter implements Screen{
     bulletHellMain game;
     int size;
 
+    FitViewport viewport;
+
+    Camera camera;
+
+    private GlyphLayout layout = new GlyphLayout();
+
     public loadingScreen(bulletHellMain game, boolean genEverytime){
         this.game = game;
         firstRender = true;
         this.genEverytimeFlag = genEverytime;
         this.shapeRenderer = new ShapeRenderer();
-        screenW = Gdx.graphics.getWidth();
-        screenH = Gdx.graphics.getHeight();
+        screenW = Gdx.graphics.getBackBufferWidth();
+        screenH = Gdx.graphics.getBackBufferHeight();
     }
 
     @Override
     public void show() {
+        camera = new OrthographicCamera();
+        viewport = new FitViewport(screenW, screenH, camera);
+        viewport.apply();
+        camera.position.set(screenW / 2f, screenH / 2f, 0);
+        camera.update();
+
         checkAssetsExist = false;
         alpha = 0f;
         font = new BitmapFont();
@@ -76,6 +92,7 @@ public class loadingScreen extends ApplicationAdapter implements Screen{
 
     @Override
     public void render(float delta) {
+        viewport.apply();
         ScreenUtils.clear(0f, 0f, 0f, 1f);
 
 
@@ -96,6 +113,9 @@ public class loadingScreen extends ApplicationAdapter implements Screen{
     }
 
     public void loadAssets(){
+        // Ensure screenW and screenH are up-to-date before using them in asset generation
+        screenW = Gdx.graphics.getBackBufferWidth();
+        screenH = Gdx.graphics.getBackBufferHeight();
         if(genEverytimeFlag){
             size = 7;
             rand = new Random();
@@ -144,16 +164,20 @@ public class loadingScreen extends ApplicationAdapter implements Screen{
     }
 
     private void loadScreenIcon(){
-        float Percent = (Gdx.graphics.getWidth() * 0.10f);
-        float xWidth = (Gdx.graphics.getWidth() - Percent) / 2f;
-        float yWidth = (Gdx.graphics.getHeight() - Percent) / 2f;
+        float Percent = screenW * 0.10f;
+        float xWidth = (screenW - Percent) / 2f;
+        float yWidth = (screenH - Percent) / 2f;
+
+        batch.setProjectionMatrix(camera.combined);
 
         batch.begin();
         if (alpha < 1f) alpha += 0.010f;
         batch.setColor(1, 1, 1, Math.min(alpha, 1f));
         batch.draw(image, xWidth, yWidth, Percent, Percent);
-        font.draw(batch, "Loading Textures", 600, 500);
+
         font.getData().setScale(10f);
+        layout.setText(font, "Loading Textures");
+        font.draw(batch, layout, (screenW - layout.width) / 2f, yWidth + Percent + layout.height + 20f);
         batch.end();
     }
 
@@ -162,13 +186,14 @@ public class loadingScreen extends ApplicationAdapter implements Screen{
         float barWidth = screenW * 0.6f;
         float barHeight = 20f;
         float x = (screenW - barWidth) / 2f;
-        float y = 100f;
+        float y = (screenH * 0.1f); // place lower on screen for spacing
 
         float maxSimulatedProgress = checkAssetsExist ? 1f : 0.7f;
-        float speed = checkAssetsExist ? 1.5f : 0.5f; // faster fill: ~2s to 0.7, quick finish
+        float speed = checkAssetsExist ? 1.5f : 0.5f;
 
         progress = Math.min(progress + Gdx.graphics.getDeltaTime() * speed, maxSimulatedProgress);
 
+        shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.DARK_GRAY);
         shapeRenderer.rect(x, y, barWidth, barHeight);

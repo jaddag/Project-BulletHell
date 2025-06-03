@@ -1,6 +1,7 @@
 package io.github.projectbullethell;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -14,12 +15,20 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
 import com.badlogic.gdx.audio.Music;
+
+import io.github.projectbullethell.startscreenassets.creditsText;
+import io.github.projectbullethell.startscreenassets.settingsText;
 import io.github.projectbullethell.startscreenassets.startText;
 import GenTexture.generateTexture;
+
+import Player.playerArrayList;
 
 import MainMethod.bulletHellMain;
 
 public class startScreen implements Screen {
+
+    // Delay timer for credits input
+    private float creditsDelayTime = 0f;
 
     private Music music;
 
@@ -35,6 +44,17 @@ public class startScreen implements Screen {
     FitViewport viewport;
     OrthographicCamera camera;
 
+    playerArrayList pal;
+
+    boolean anim;
+    boolean animStart;
+    int timeCount;
+
+    private boolean flyOut = false;
+    private float resetTimer = 0f;
+
+    Sprite shipSprite;
+
     float scrollY, scrollY1, scrollY2, scrollSkyTexture;
     float speed;
     float speed1;
@@ -48,14 +68,41 @@ public class startScreen implements Screen {
     Texture starBackground;
     Texture alphaBackground;
 
-    generateTexture generateTexture;
-    Sprite text;
+    generateTexture bg;
+    startScreen startScreen;
+    Sprite textSettings;
     Texture textTexture;
     startText startText;
+    settingsText settingsText;
+    creditsText creditText;
 
     Color color;
     float spriteW;
     float spriteH;
+
+    Texture startTexture;
+    Texture settingsTexture;
+    Texture creditsTexture;
+
+    float textX;
+    float textStartY;
+
+    float textSettingsX;
+    float textSettingsY;
+
+    float textCreditsX;
+    float textCreditsY;
+
+    boolean menu;
+    boolean settings;
+    boolean credits;
+
+    float red;
+    float green;
+    float blue;
+
+    private float animationTime = 0f;
+
     public startScreen(bulletHellMain game){
         this.game = game;
     }
@@ -67,8 +114,8 @@ public class startScreen implements Screen {
         speed2 = 30f;
         speedSky = 5f;
 
-        screenH = Gdx.graphics.getHeight();
-        screenW = Gdx.graphics.getWidth();
+        screenH = Gdx.graphics.getBackBufferHeight();
+        screenW = Gdx.graphics.getBackBufferWidth();
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, screenW, screenH);
@@ -80,28 +127,57 @@ public class startScreen implements Screen {
 
         getBG();
 
-        color = new Color(Color.BLUE);
-        startText = new startText(color.r, color.g, color.b);
+        bg = new generateTexture();
 
-        generateTexture = new generateTexture();
-        textTexture = generateTexture.genTexture(28, 7, 10, startText.getPixels());
+        Color color = Color.valueOf("00FFFF");
 
-        text = new Sprite(textTexture);
-        text.setOriginCenter();
+        this.red = color.r;
+        this.green = color.g;
+        this.blue = color.b;
 
-        spriteW = text.getWidth();
-        spriteH = text.getHeight();
+        startText = new startText(red, green, blue);
+        settingsText = new settingsText(red, green, blue);
+        creditText = new creditsText(red, green, blue);
 
-        text.setPosition(screenW / 2f - text.getWidth() / 2f, screenH / 2f - text.getHeight() / 2f);
+        startTexture = bg.genTexture(26, 7, 10, startText.getPixels());
+        settingsTexture = bg.genTexture(39, 7, 10, settingsText.getPixels());
+        creditsTexture = bg.genTexture(33, 7, 10, creditText.getPixels());
+
+        textSettingsY = (screenH - settingsTexture.getHeight()) / 2f;
+        textStartY = textSettingsY + 100;
+        textCreditsY = textSettingsY - 100;
+
+        textX = (screenW - startTexture.getWidth()) / 2f;
+        textSettingsX = (screenW - settingsTexture.getWidth()) / 2f;
+        textCreditsX = (screenW - creditsTexture.getWidth()) / 2f;
 
         startMusic();
 
+        menu = true;
+        settings = false;
+        credits = false;
+
+        pal = new playerArrayList();
+        pal.load();
+        shipSprite = new Sprite(bg.genTexture(27, 10, pal.getArrayList()));
+        shipSprite.setOriginCenter();
+
+        shipSprite.setY(-shipSprite.getHeight());
+        shipSprite.setX(screenW/7f);
+
+        System.out.println("loaded");
+
+        anim = true;
+        animStart = true;
     }
 
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        // Update the credits input delay timer
+        creditsDelayTime += Gdx.graphics.getDeltaTime();
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(1, 1, 1, 1);
@@ -114,15 +190,59 @@ public class startScreen implements Screen {
         shapeRenderer.end();
 
         background();
-        drawText();
-        inputButton();
 
+        animShip();
+
+        if(menu){
+            drawText();
+            inputButtonMenu();
+        }
+
+        if (settings){
+//            showSettings();
+//            inputButtonSettings();
+        }
+
+        if(credits){
+//            showCredits();
+            inputCredits();
+//            renderAnim();
+        }
     }
 
-    public void drawText(){
+
+
+    //fix this
+    public void animShip(){
+//        anim = true;
+//        animStart = true;
+        if (anim) {
+            if (animStart) {
+                animStart = false;
+            }
+            flyAnim(8f, 400f);
+        }
+
+        spriteBatch.begin();
+        shipSprite.draw(spriteBatch);
+        spriteBatch.end();
+    }
+
+    public void inputCredits(){
+        if(Gdx.input.isTouched() && creditsDelayTime >= 1f){
+            System.out.println("is pressed");
+            credits = true;
+            menu = true;
+            creditsDelayTime = 0f;
+        }
+    }
+
+    public void drawText() {
         spriteBatch.begin();
 
-        text.draw(spriteBatch);
+        spriteBatch.draw(startTexture, textX, textStartY);
+        spriteBatch.draw(settingsTexture, textSettingsX, textSettingsY);
+        spriteBatch.draw(creditsTexture, textCreditsX, textCreditsY);
 
         spriteBatch.end();
     }
@@ -200,19 +320,44 @@ public class startScreen implements Screen {
         }
     }
 
-    public void inputButton(){
+    public void inputButtonMenu(){
         if (Gdx.input.justTouched()) {
-            int touchX = Gdx.input.getX();
-            int touchY = Gdx.graphics.getHeight() - Gdx.input.getY(); // Flip Y
+            viewport.apply();
+            Vector3 touchPos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+            camera.unproject(touchPos, viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
 
-            float rectX = Gdx.graphics.getWidth() / 2f - 100;
-            float rectY = Gdx.graphics.getHeight() / 2f - 25;
-            float rectWidth = 200;
-            float rectHeight = 50;
+            float touchX = touchPos.x;
+            float touchY = touchPos.y;
 
-            if (touchX >= rectX && touchX <= rectX + rectWidth &&
-                touchY >= rectY && touchY <= rectY + rectHeight) {
+            // Start Button Area
+            float startX = textX;
+            float startY = textStartY;
+            float startW = startTexture.getWidth();
+            float startH = startTexture.getHeight();
+
+            // Settings Button Area
+            float settingsX = textSettingsX;
+            float settingsY = textSettingsY;
+            float settingsW = settingsTexture.getWidth();
+            float settingsH = settingsTexture.getHeight();
+
+            // Credits Button Area
+            float creditsX = textCreditsX;
+            float creditsY = textCreditsY;
+            float creditsW = creditsTexture.getWidth();
+            float creditsH = creditsTexture.getHeight();
+
+            if (touchX >= startX && touchX <= startX + startW &&
+                touchY >= startY && touchY <= startY + startH) {
                 game.setScreen(new gameScreen(game, music));
+            } else if (touchX >= settingsX && touchX <= settingsX + settingsW &&
+                       touchY >= settingsY && touchY <= settingsY + settingsH) {
+                toggleMusic();
+            } else if (touchX >= creditsX && touchX <= creditsX + creditsW &&
+                       touchY >= creditsY && touchY <= creditsY + creditsH) {
+
+                menu = false;
+                credits = true;
             }
         }
     }
@@ -231,14 +376,21 @@ public class startScreen implements Screen {
     @Override
     public void hide() {}
 
-    public void startMusic() {
+    public void toggleMusic(){
 
+        if(music.isPlaying()){
+            music.pause();
+        } else {
+            music.play();
+        }
+    }
+
+    public void startMusic() {
         music = Gdx.audio.newMusic(Gdx.files.internal("audioFiles/LoveIs.mp3"));
         music.setLooping(true);
         music.setVolume(0.5f);
 
         music.play();
-
     }
 
     @Override
@@ -250,10 +402,47 @@ public class startScreen implements Screen {
         if (backgroundTexture3 != null) backgroundTexture3.dispose();
         if (starBackground != null) starBackground.dispose();
         if (alphaBackground != null) alphaBackground.dispose();
+        if (startTexture != null) startTexture.dispose();
+        if (settingsTexture != null) settingsTexture.dispose();
+        if (creditsTexture != null) creditsTexture.dispose();
         if (music != null) music.dispose();
     }
 
+    private void flyAnim(float time, float FlyingYPos) {
+        float destinationY = screenH / 2f - shipSprite.getHeight() / 2f;
 
+        animationTime += Gdx.graphics.getDeltaTime();
+        float t = Math.min(animationTime / time, 1f);
 
+        float currentY = shipSprite.getY();
 
+        if (anim) {
+            float factor;
+
+            if (currentY <= destinationY) {
+                factor = circOut(t);
+                float newY = currentY + (destinationY - currentY) * factor;
+                shipSprite.setY(newY);
+            } else {
+                factor = circIn(t);
+                float newY = currentY + (screenH - currentY + shipSprite.getHeight()) * factor;
+                shipSprite.setY(newY);
+
+                if (newY > screenH + shipSprite.getHeight()) {
+                    shipSprite.setY(-shipSprite.getHeight());
+                    animationTime = 0f;
+                    anim = true;
+                    animStart = true;
+                }
+            }
+        }
+    }
+
+    public float circOut(float t) {
+        return (float)Math.sqrt(1 - (t - 1) * (t - 1));
+    }
+
+    public float circIn(float t) {
+        return 1 - (float)Math.sqrt(1 - t * t);
+    }
 }

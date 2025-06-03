@@ -4,14 +4,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import Player.player;
+import Enemy.enemy;
+import CameraClass.camera;
+import ShowBounds.showBounds;
 
 public class drawHUD {
+    camera gameCamera;
     private float screenW;
     private float screenH;
 
@@ -25,28 +28,31 @@ public class drawHUD {
     private Vector2 touchPos;
     private String dev;
     private player player;
+    private enemy enemy;
     private boolean enableInput;
     private joyStick js1;
     private joyStick js2;
-    private HUD.button button;
     private float shipSpeed;
     private float size;
     private boolean enableDevStats;
-    ShapeRenderer spr;
 
-    public drawHUD(boolean enableDevStats, boolean enableInput, Vector2 joyStickCords, Vector2 joyStickCords2, player player){
+    float offset;
+
+    public drawHUD(boolean enableDevStats, boolean enableInput, Vector2 joyStickCords, Vector2 joyStickCords2, player player, enemy enemy){
         screenH = Gdx.graphics.getHeight();
         screenW = Gdx.graphics.getWidth();
 
         camera = new OrthographicCamera();
+
         hudViewport = new FitViewport(screenW, screenH, camera);
 
-        size = 2f;
+        size = 0.5f;
 
         this.player = player;
+        this.enemy = enemy;
 
-        js1 = new joyStick(150, joyStickCords, player, "left");
-        js2 = new joyStick(150, joyStickCords2, player, "right");
+        js1 = new joyStick(50, joyStickCords, player, "left");
+        js2 = new joyStick(50, joyStickCords2, player, "right");
 //        button = new button(200, buttonCords);
 
         this.enableInput = enableInput;
@@ -62,9 +68,9 @@ public class drawHUD {
         font.getData().setScale(size);
 
         //HpBar
-        makeHpBar();
+        makeHpBars();
 
-        spr = new ShapeRenderer();
+        offset = 50f;
     }
 
     public void draw(Vector2 touchPos){
@@ -77,57 +83,49 @@ public class drawHUD {
         js2.draw();
 //        button.draw();
         devText();
-        hpBar();
+        hpBarPlayer();
+        hpBarBoss();
 
     }
 
-    public void makeHpBar(){
+    public void makeHpBars(){
         player.HealthBar(100);
+        enemy.HealthBar(500);
     }
 
-    public void hpBar(){
-        player.render(spr, Gdx.graphics.getWidth()-300f, Gdx.graphics.getHeight()-30f, Gdx.graphics.getWidth()/10f, Gdx.graphics.getWidth()/30f);
+    public void hpBarPlayer(){
+        player.renderHealthBar(40f, screenH-20f, screenW/10f, screenW/90f);
+    }
+
+    public void hpBarBoss(){
+        enemy.renderHealthBar(screenW-40f-(screenW/10f), screenH-20f, screenW/10f, screenW/90f);
     }
 
     private void updateMultiTouch() {
         if (!enableInput) return;
 
-        boolean joystickHandled = false;
-//        boolean buttonPressed = false;
+        boolean leftTouched = false;
+        boolean rightTouched = false;
 
-        for (int i = 0; i < 2; i++) { // erkennen von max. 2 Fingern
-
+        for (int i = 0; i < 2; i++) {
             if (Gdx.input.isTouched(i)) {
                 Vector2 fingerPos = new Vector2(Gdx.input.getX(i), Gdx.input.getY(i));
                 hudViewport.unproject(fingerPos);
 
-                if (!joystickHandled && js1.getTouchArea().contains(fingerPos)) {
+                if (js1.getTouchArea().contains(fingerPos)) {
                     js1.moveJoyStick(shipSpeed, fingerPos);
-                    joystickHandled = true;
-
+                    leftTouched = true;
                 }
 
-                if (!joystickHandled && js2.getTouchArea().contains(fingerPos)) {
+                if (js2.getTouchArea().contains(fingerPos)) {
                     js2.moveJoyStick(shipSpeed, fingerPos);
-                    joystickHandled = true;
-
+                    rightTouched = true;
                 }
-
-//                if (fingerPos.dst(button.getButtonPos()) <= button.getButtonSize() / 2f) {
-//                    buttonPressed = true;
-//                }
             }
         }
 
-//        button.setPressed(buttonPressed);
-
-        if (!joystickHandled) {
-            js1.reset();
-            js2.reset();
-
-//        if ( !Gdx.input.isTouched()){
-//            button.update(null);
-        }
+        if (!leftTouched) js1.reset();
+        if (!rightTouched) js2.reset();
     }
 
     private void updateMultiTouchAlt() {
@@ -152,8 +150,8 @@ public class drawHUD {
 
 
         if (!joystickHandled) {
-            js1.reset();
-            js2.reset();
+//            js1.reset();
+//            js2.reset();
         }
     }
 
@@ -165,10 +163,10 @@ public class drawHUD {
         if(!enableDevStats) return;
         textbatch.begin();
 
-        font.draw(textbatch, "FPS: " + Gdx.graphics.getFramesPerSecond() + " SR: " + screenW + " x " + screenH, 20, screenH - 10*size);
-        font.draw(textbatch, "PosX: " + (player.getSprite().getX() + (player.getSprite().getWidth() / 2)) + " PoxY: " + (player.getSprite().getY() + (player.getSprite().getHeight() / 2)), 20, screenH - 30*size);
-        font.draw(textbatch, "checkedButton: " + true,20, screenH - 50*size);
-        font.draw(textbatch, "dev Options: " + dev, 20, screenH - 90*size);
+        font.draw(textbatch, "FPS: " + Gdx.graphics.getFramesPerSecond() + " SR: " + screenW + " x " + screenH, 20, screenH - (screenH / 15f)*1 - offset);
+        font.draw(textbatch, "PosX: " + player.getShipCenter().x + " PoxY: " + player.getShipCenter().y, 20, screenH - (screenH / 15f)*1.5f - offset);
+        font.draw(textbatch, "checkedButton: " + true,20, screenH - (screenH / 15f)*2 - offset);
+        font.draw(textbatch, "dev Options: " + dev, 20, screenH - (screenH / 15f)*2.5f - offset);
 
         textbatch.end();
     }

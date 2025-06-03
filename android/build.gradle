@@ -9,7 +9,7 @@ apply plugin: 'com.android.application'
 
 
 android {
-  namespace "io.github.projectbullethell"
+  namespace "com.badlogic.bullethell"
   compileSdk 35
   sourceSets {
     main {
@@ -31,12 +31,11 @@ android {
 		}
   }
   defaultConfig {
-    applicationId 'io.github.projectbullethell'
-    minSdkVersion 19
+    applicationId 'com.badlogic.bullethell'
+    minSdkVersion 21
     targetSdkVersion 35
     versionCode 1
     versionName "1.0"
-    multiDexEnabled true
   }
   compileOptions {
     sourceCompatibility "8"
@@ -59,9 +58,10 @@ repositories {
 configurations { natives }
 
 dependencies {
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
+  coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
   implementation "com.badlogicgames.gdx-controllers:gdx-controllers-android:$gdxControllersVersion"
   implementation "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
+  implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
   implementation project(':core')
 
   natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-arm64-v8a"
@@ -125,7 +125,7 @@ tasks.register('run', Exec) {
   }
 
   def adb = path + "/platform-tools/adb"
-  commandLine "$adb", 'shell', 'am', 'start', '-n', 'io.github.projectbullethell/io.github.projectbullethell.android.AndroidLauncher'
+  commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.badlogic.bullethell/com.badlogic.bullethell.android.AndroidLauncher'
 }
 
 eclipse.project.name = appName + "-android"

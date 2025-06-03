@@ -26,8 +26,8 @@ public class camera {
     boolean testTouchingBottom;
 
     public camera(Sprite sprite){
-        screenW = Gdx.graphics.getWidth();
-        screenH = Gdx.graphics.getHeight();
+        screenW = Gdx.graphics.getBackBufferWidth();
+        screenH = Gdx.graphics.getBackBufferHeight();
 
         worldBorderRight = screenW * 2;
         worldBorderLeft = 0;
