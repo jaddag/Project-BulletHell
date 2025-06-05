@@ -17,6 +17,7 @@ import Glow.generateGlowTextures;
 
 import Player.damage.attackPlayer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 
 import java.util.HashMap;
 
@@ -128,7 +129,8 @@ public class player implements Disposable {
         this.currentHealth = maxHealth;
     }
 
-    public void renderHealthBar(float x, float y, float width, float height) {
+    public void renderHealthBar(float x, float y, float width, float height, camera gameCamera) {
+        healthShape.setProjectionMatrix(gameCamera.getCamera().combined);
         healthShape.begin(ShapeRenderer.ShapeType.Filled);
 
         // Fake border by drawing a larger dark rectangle

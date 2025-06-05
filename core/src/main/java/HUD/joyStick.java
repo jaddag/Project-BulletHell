@@ -42,16 +42,16 @@ public class joyStick {
         bigCircleCords = new Vector2(cords);
         smallCircleCords = new Vector2(cords);
 
-        screenW = Gdx.graphics.getWidth();
-        screenH = Gdx.graphics.getHeight();
+        screenW = Gdx.graphics.getBackBufferWidth();
+        screenH = Gdx.graphics.getBackBufferHeight();
 
         firstTouch = true;
 
         radiusBigCircle = buttonSize;
         radiusSmallCircle = (int)(radiusBigCircle * 0.3f);
 
-        if(area.equals("left"))touchArea = new Rectangle(0,0, screenW/2f, screenW);
-        if(area.equals("right"))touchArea = new Rectangle(screenW/2f,0, screenW/2f, screenW);
+        if(area.equals("left"))touchArea = new Rectangle(0, 0, screenW / 2f, screenH);
+        if(area.equals("right"))touchArea = new Rectangle(screenW / 2f, 0, screenW / 2f, screenH);
 
         activePointer = -1;
         shootDirection = new Vector2();

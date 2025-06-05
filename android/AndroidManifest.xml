@@ -5,22 +5,22 @@
   <application
       android:allowBackup="true"
       android:fullBackupContent="true"
-      android:icon="@drawable/ic_launcher"
+      android:icon="@drawable/bullethellicon"
       android:isGame="true"
       android:appCategory="game"
       android:label="@string/app_name"
       tools:ignore="UnusedAttribute"
       android:theme="@style/GdxTheme">
-    <activity
-        android:name="com.badlogic.bullethell.android.AndroidLauncher"
-        android:label="@string/app_name"
-        android:screenOrientation="landscape"
-        android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout"
-        android:exported="true">
+      <activity
+          android:name="io.github.projectbullethell.android.AndroidLauncher"
+          android:label="@string/app_name"
+          android:screenOrientation="landscape"
+          android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout"
+          android:exported="true">
         <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
         <category android:name="android.intent.category.LAUNCHER"/>
-      </intent-filter>
+        </intent-filter>
     </activity>
   </application>
 

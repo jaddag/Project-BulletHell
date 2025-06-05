@@ -10,6 +10,8 @@ import MainMethod.bulletHellMain;
 /** Launches the Android application. */
 public class AndroidLauncher extends AndroidApplication {
 
+    String plattform;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,6 +22,7 @@ public class AndroidLauncher extends AndroidApplication {
         config.useImmersiveMode = true;
         config.numSamples = 2;
 
-        initialize(new bulletHellMain(), config);
+        plattform = "android";
+        initialize(new bulletHellMain(plattform), config);
     }
 }

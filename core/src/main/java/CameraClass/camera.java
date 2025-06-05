@@ -25,6 +25,22 @@ public class camera {
     boolean testTouchingTop;
     boolean testTouchingBottom;
 
+    public camera(){
+        screenW = Gdx.graphics.getBackBufferWidth();
+        screenH = Gdx.graphics.getBackBufferHeight();
+
+        worldBorderRight = screenW * 2;
+        worldBorderLeft = 0;
+        worldBorderBottom = 0;
+        worldBorderTop = screenH * 2;
+
+        camPos = new Vector3(screenW/2, screenH/2 , 0f);
+        camPos2 = new Vector2(screenW/2, screenH/2);
+
+        camera = new OrthographicCamera();
+        zoom = 1f;
+    }
+
     public camera(Sprite sprite){
         screenW = Gdx.graphics.getBackBufferWidth();
         screenH = Gdx.graphics.getBackBufferHeight();
@@ -96,6 +112,10 @@ public class camera {
         camera.position.set(targetX, targetY, 0);
         camera.zoom = zoom;
         camera.update();
+    }
+
+    public void updateZoom(float zoom){
+        camera.zoom = zoom;
     }
 
 

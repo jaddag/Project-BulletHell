@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "io.github.projectbullethell",
+  "applicationId": "com.badlogic.bullethell",
   "variantName": "release",
   "elements": [
     {
@@ -33,5 +33,5 @@
       ]
     }
   ],
-  "minSdkVersionForDexing": 19
+  "minSdkVersionForDexing": 21
 }

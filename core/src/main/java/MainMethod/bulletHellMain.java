@@ -11,7 +11,11 @@ import io.github.projectbullethell.loadingScreen;
 
 public class bulletHellMain extends Game {
 
+    public bulletHellMain(String plattform){
+        this.platform = plattform;
+    }
 
+    private String platform;
     public SpriteBatch batch;
     public AssetManager assetManager;
 

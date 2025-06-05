@@ -10,12 +10,14 @@ import MainMethod.bulletHellMain;
 
 /** Launches the iOS (RoboVM) application. */
 public class IOSLauncher extends IOSApplication.Delegate {
+    String platform;
     @Override
     protected IOSApplication createApplication() {
         IOSApplicationConfiguration configuration = new IOSApplicationConfiguration();
         configuration.orientationLandscape = true;
         configuration.orientationPortrait = false;
-        return new IOSApplication(new bulletHellMain(), configuration);
+        platform = "ios";
+        return new IOSApplication(new bulletHellMain(platform), configuration);
     }
 
     public static void main(String[] argv) {

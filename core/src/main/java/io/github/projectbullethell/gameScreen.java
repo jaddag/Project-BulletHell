@@ -192,8 +192,8 @@ public class gameScreen implements Screen {
 
     public void HUD(){
 //        buttonCords = new Vector2(screenW -200f, 200f);
-        jsCords = new Vector2(Gdx.graphics.getWidth()*0.1f, Gdx.graphics.getHeight()*0.2f);
-        jsCords2 = new Vector2(Gdx.graphics.getWidth()*0.9f, Gdx.graphics.getHeight()*0.2f);
+        jsCords = new Vector2(Gdx.graphics.getBackBufferWidth()*0.1f, Gdx.graphics.getBackBufferHeight()*0.2f);
+        jsCords2 = new Vector2(Gdx.graphics.getBackBufferWidth()*0.1f, Gdx.graphics.getBackBufferHeight()*0.2f);
 
         drawHUD = new drawHUD(true, enableInput, jsCords, jsCords2, player1, enemy1);
         drawHUD.setShipSpeed(shipSpeed);
@@ -202,7 +202,7 @@ public class gameScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
-        drawHUD.getHudViewport().update(width, height, true);
+        drawHUD.updateCamera();
     }
 
     @Override
@@ -217,7 +217,7 @@ public class gameScreen implements Screen {
         detectCollision();
         killPlayer();
         killBoss();
-        HitBox();
+//        HitBox();
     }
 
     @Override
