@@ -107,8 +107,8 @@ public class drawHUD {
 
         for (int i = 0; i < 2; i++) {
             if (Gdx.input.isTouched(i)) {
-                float normalizedX = (Gdx.input.getX(i) / (float)Gdx.graphics.getWidth()) * screenW;
-                float normalizedY = ((Gdx.graphics.getHeight() - Gdx.input.getY(i)) / (float)Gdx.graphics.getHeight()) * screenH;
+                float normalizedX = (Gdx.input.getX(i) / (float)Gdx.graphics.getBackBufferWidth()) * screenW;
+                float normalizedY = ((Gdx.graphics.getBackBufferHeight() - Gdx.input.getY(i)) / (float)Gdx.graphics.getBackBufferHeight()) * screenH;
                 Vector2 fingerPos = new Vector2(normalizedX, normalizedY);
 
                 if (js1.getTouchArea().contains(fingerPos)) {

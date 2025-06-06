@@ -193,7 +193,7 @@ public class gameScreen implements Screen {
     public void HUD(){
 //        buttonCords = new Vector2(screenW -200f, 200f);
         jsCords = new Vector2(Gdx.graphics.getBackBufferWidth()*0.1f, Gdx.graphics.getBackBufferHeight()*0.2f);
-        jsCords2 = new Vector2(Gdx.graphics.getBackBufferWidth()*0.1f, Gdx.graphics.getBackBufferHeight()*0.2f);
+        jsCords2 = new Vector2(Gdx.graphics.getBackBufferWidth()*0.9f, Gdx.graphics.getBackBufferHeight()*0.2f);
 
         drawHUD = new drawHUD(true, enableInput, jsCords, jsCords2, player1, enemy1);
         drawHUD.setShipSpeed(shipSpeed);
